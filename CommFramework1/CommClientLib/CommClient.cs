@@ -5,14 +5,16 @@ namespace CommClientLib
 {
     public class CommClient
     {
-        public async void Connect(string message)
+        public void Connect(string message)
         {
             try
             {
-                using var channel = GrpcChannel.ForAddress("https://localhost:50051");
+                Thread.Sleep(2000);
+                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                using var channel = GrpcChannel.ForAddress("http://localhost:50051");
                 var client = new Greeter.GreeterClient(channel);
-                var reply = await client.SayHelloAsync(
-                                     new HelloRequest { Name = $"{message}" });
+                var reply = client.SayHelloAsync(
+                                     new HelloRequest { Name = $"{message}" }).GetAwaiter().GetResult();
                 Console.WriteLine("Greeting: " + reply.Message);
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
