@@ -1,10 +1,6 @@
 ﻿namespace CommServerLib.ClientManagement
 {
-    public class Client
+    public record Client(string Id, string Name, string Type, string Address, string Port, Dictionary<string, string> Properties, DateTime LastUpdate)
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-
-        
     }
 }
