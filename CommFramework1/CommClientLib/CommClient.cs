@@ -1,10 +1,6 @@
-﻿using Grpc.Core;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using GrpcClient1;
-using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Channels;
-using System.Xml.Serialization;
 
 namespace CommClientLib
 {
@@ -24,8 +20,10 @@ namespace CommClientLib
 
                 var client = new Greeter.GreeterClient(channel);
 
-                var reply = client.SayHelloAsync(
-                                     new HelloRequest { Name = $"{message}" }).GetAwaiter().GetResult();
+                var reply = client
+                    .SayHelloAsync(new HelloRequest { Name = $"{message}" })
+                    .GetAwaiter()
+                    .GetResult();
 
                 Console.WriteLine("Greeting: " + reply.Message);
                 Console.WriteLine("Press any key to exit...");

@@ -3,7 +3,7 @@ using GrpcService1;
 
 namespace CommServerLib
 {
-    public class CommServer
+    public class CmServer
     {
         public void Start(int port)
         {
