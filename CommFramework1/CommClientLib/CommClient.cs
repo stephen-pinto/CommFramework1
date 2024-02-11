@@ -15,7 +15,7 @@ namespace CommClientLib
 
             try
             {
-                MethodThree(message);
+                MethodTwo(message);
             }
             catch (Exception ex)
             {
@@ -76,10 +76,9 @@ namespace CommClientLib
             //httpClientHandler.ClientCertificates.Add(new X509Certificate2("C:\\certs\\CommServer.crt"));
             httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
-
             // Pass the client certificate so the server can authenticate the client
-            //var clientCert = X509Certificate2.CreateFromPemFile("C:\\certs\\CommClient.crt", "C:\\certs\\client.key");
-            //httpClientHandler.ClientCertificates.Add(clientCert);
+            var clientCert = X509Certificate2.CreateFromPemFile("C:\\certs\\CommClient.crt", "C:\\certs\\client.key");
+            httpClientHandler.ClientCertificates.Add(clientCert);
 
             // Create a GRPC Channel
             var httpClient = new HttpClient(httpClientHandler);
