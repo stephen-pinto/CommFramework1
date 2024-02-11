@@ -2,4 +2,4 @@
 using CommServerLib;
 
 CommServer commServer = new CommServer();
-commServer.Start();
+commServer.Start(50051);

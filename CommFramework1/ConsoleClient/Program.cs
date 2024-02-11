@@ -3,4 +3,4 @@ Console.WriteLine("Hello, World!");
 
 
 CommClientLib.CommClient client = new CommClientLib.CommClient();
-client.Connect("Hello from ConsoleClient");
+client.Connect(50051, "Hello from ConsoleClient");

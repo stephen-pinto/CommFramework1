@@ -5,25 +5,29 @@ namespace CommServerLib
 {
     public class CommServer
     {
-        public void Start()
+        public void Start(int port)
         {
-            List<KeyCertificatePair> certificados = new List<KeyCertificatePair>();
-            certificados.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
-            ServerCredentials servCred = new SslServerCredentials(certificados);
-
             Server server = new Server
             {
                 Services = { Greeter.BindService(new GreeterService()) },
-                Ports = { new ServerPort("localhost", 50051, servCred) }
+                Ports = { new ServerPort("localhost", port, GetSecureChannel()) }
             };
 
             server.Start();
 
-            Console.WriteLine("Greeter server listening on port 50051");
+            System.Diagnostics.Debug.WriteLine($"Greeter server listening on port {port}");
+
             Console.WriteLine("Press any key to stop the server");
             Console.ReadKey();
 
             server.ShutdownAsync().Wait();
+        }
+
+        private SslServerCredentials GetSecureChannel()
+        {
+            List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
+            certificates.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
+            return new SslServerCredentials(certificates);
         }
     }
 }
