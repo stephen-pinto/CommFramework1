@@ -7,10 +7,14 @@ namespace CommServerLib
     {
         public void Start()
         {
+            List<KeyCertificatePair> certificados = new List<KeyCertificatePair>();
+            certificados.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
+            ServerCredentials servCred = new SslServerCredentials(certificados);
+
             Server server = new Server
             {
                 Services = { Greeter.BindService(new GreeterService()) },
-                Ports = { new ServerPort("localhost", 50051, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("localhost", 50051, servCred) }
             };
 
             server.Start();
