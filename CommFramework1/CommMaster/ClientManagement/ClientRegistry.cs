@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace CommServerLib.ClientManagement
+namespace CommMaster.ClientManagement
 {
     public interface IClientRegistry : IDictionary<string, Client>
     {

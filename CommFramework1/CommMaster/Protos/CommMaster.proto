@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "CommServer";
+option csharp_namespace = "CommMaster";
 
-package CommService;
+package CommMaster;
 
 service CommService {
   rpc Register (RegisterationRequest) returns (RegisterationResponse);
@@ -15,9 +15,8 @@ message RegisterationRequest {
   string clientId = 1;
   string type = 2;
   string name = 3;
-  string address = 4;
-  string port = 5;
-  map<string, string> properties = 6;
+  string address = 4;  
+  map<string, string> properties = 5;
 }
 
 message RegisterationResponse {

@@ -1,14 +1,13 @@
-﻿using CommServer;
-using CommServerLib.ClientManagement;
+﻿using CommMaster.ClientManagement;
 using Grpc.Core;
 
-namespace CommServerLib
+namespace CommMaster
 {
-    public class MainServer : CommService.CommServiceBase
+    internal class MasterService : CommService.CommServiceBase
     {
         IClientRegistry _registry;
 
-        internal MainServer(IClientRegistry registry)
+        internal MasterService(IClientRegistry registry)
         {
             _registry = registry;
         }

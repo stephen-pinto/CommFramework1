@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "CommClient";
+
+package CommClient;
+
+service CommService {
+  rpc MakeRequest (Message) returns (Message);
+  rpc Notify (Message) returns (Message);
+}
+
+message Message {
+  string to = 1;
+  string from = 2;
+  string id = 3;
+  MessageType type = 4;
+  string data = 5;
+  map<string, string> metadata = 6;
+  map<string, string> headers = 7;
+}
+
+enum MessageType
+{
+  REQUEST = 0;
+  RESPONSE = 1;
+  NOTIFICATION = 2;
+}
