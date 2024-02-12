@@ -1,16 +1,12 @@
 syntax = "proto3";
 
-option csharp_namespace = "CommMaster";
-
-import "Protos/CommSharedTypes.proto";
-
 package CommMaster;
 
-service CommService {
+option csharp_namespace = "CommServices.CommMaster";
+
+service CommMasterService {
   rpc Register (RegisterationRequest) returns (RegisterationResponse);
-  rpc Unregister (RegisterationRequest) returns (RegisterationResponse);
-  rpc MakeRequest (CommShared.Message) returns (CommShared.Message);
-  rpc Notify (CommShared.Message) returns (CommShared.Message);
+  rpc Unregister (RegisterationRequest) returns (RegisterationResponse);  
 }
 
 message RegisterationRequest {

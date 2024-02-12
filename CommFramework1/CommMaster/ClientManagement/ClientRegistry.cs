@@ -2,20 +2,20 @@
 
 namespace CommMaster.ClientManagement
 {
-    public interface IClientRegistry : IDictionary<string, Client>
+    public interface IClientRegistry : IDictionary<string, Peer>
     {
     }
 
     public class ClientRegistry : IClientRegistry
     {
-        private Dictionary<string, Client> _registry;
+        private Dictionary<string, Peer> _registry;
 
         public ClientRegistry()
         {
-            _registry = new Dictionary<string, Client>();
+            _registry = new Dictionary<string, Peer>();
         }
 
-        public Client this[string key]
+        public Peer this[string key]
         {
             get
             {
@@ -29,13 +29,13 @@ namespace CommMaster.ClientManagement
 
         public ICollection<string> Keys => _registry.Keys;
 
-        public ICollection<Client> Values => _registry.Values;
+        public ICollection<Peer> Values => _registry.Values;
 
         public int Count => _registry.Count;
 
         public bool IsReadOnly => false;
 
-        public void Add(string key, Client value)
+        public void Add(string key, Peer value)
         {
             _registry.Add(key, value);
         }
@@ -50,12 +50,12 @@ namespace CommMaster.ClientManagement
             return _registry.Remove(key);
         }
 
-        public bool TryGetValue(string key, out Client value)
+        public bool TryGetValue(string key, out Peer value)
         {
             return _registry.TryGetValue(key, out value);
         }
 
-        public void Add(KeyValuePair<string, Client> item)
+        public void Add(KeyValuePair<string, Peer> item)
         {
             _registry.Add(item.Key, item.Value);
         }
@@ -65,23 +65,23 @@ namespace CommMaster.ClientManagement
             _registry.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, Client> item)
+        public bool Contains(KeyValuePair<string, Peer> item)
         {
             return _registry.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, Client>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, Peer>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
             //_registry.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<string, Client> item)
+        public bool Remove(KeyValuePair<string, Peer> item)
         {
             return _registry.Remove(item.Key);
         }
 
-        public IEnumerator<KeyValuePair<string, Client>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, Peer>> GetEnumerator()
         {
             return _registry.GetEnumerator();
         }
