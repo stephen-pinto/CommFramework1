@@ -16,15 +16,17 @@ namespace CommMaster
 
         public override Task<RegisterationResponse> Register(RegisterationRequest request, ServerCallContext context)
         {
-            request.ClientId = Guid.NewGuid().ToString();
-            _registry.Add(Guid.NewGuid().ToString(), request.ToPeer());
-            return new Task<RegisterationResponse>(() => new RegisterationResponse { ClientId = request.ClientId, Status = "Success" });
+            request.RegistrationId = Guid.NewGuid().ToString();
+            PeerHandlerResolver resolver = new PeerHandlerResolver();
+            var handle = resolver.GetHandle(request);
+            _registry.Add(Guid.NewGuid().ToString(), new PeerRegistryEntry(request.RegistrationId, request.ToPeer(), handle));
+            return new Task<RegisterationResponse>(() => new RegisterationResponse { RegistrationId = request.RegistrationId, Status = "Success" });
         }
 
         public override Task<RegisterationResponse> Unregister(RegisterationRequest request, ServerCallContext context)
         {
-            _registry.Remove(request.ClientId);
-            return new Task<RegisterationResponse>(() => new RegisterationResponse { ClientId = request.ClientId, Status = "Success" });
-        }    
+            _registry.Remove(request.RegistrationId);
+            return new Task<RegisterationResponse>(() => new RegisterationResponse { RegistrationId = request.RegistrationId, Status = "Success" });
+        }
     }
 }

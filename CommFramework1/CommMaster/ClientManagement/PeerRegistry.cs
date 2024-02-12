@@ -2,20 +2,20 @@
 
 namespace CommMaster.ClientManagement
 {
-    public interface IClientRegistry : IDictionary<string, Peer>
+    public interface IClientRegistry : IDictionary<string, PeerRegistryEntry>
     {
     }
 
-    public class ClientRegistry : IClientRegistry
+    public class PeerRegistry : IClientRegistry
     {
-        private Dictionary<string, Peer> _registry;
+        private Dictionary<string, PeerRegistryEntry> _registry;
 
-        public ClientRegistry()
+        public PeerRegistry()
         {
-            _registry = new Dictionary<string, Peer>();
+            _registry = new Dictionary<string, PeerRegistryEntry>();
         }
 
-        public Peer this[string key]
+        public PeerRegistryEntry this[string key]
         {
             get
             {
@@ -29,13 +29,13 @@ namespace CommMaster.ClientManagement
 
         public ICollection<string> Keys => _registry.Keys;
 
-        public ICollection<Peer> Values => _registry.Values;
+        public ICollection<PeerRegistryEntry> Values => _registry.Values;
 
         public int Count => _registry.Count;
 
         public bool IsReadOnly => false;
 
-        public void Add(string key, Peer value)
+        public void Add(string key, PeerRegistryEntry value)
         {
             _registry.Add(key, value);
         }
@@ -50,12 +50,12 @@ namespace CommMaster.ClientManagement
             return _registry.Remove(key);
         }
 
-        public bool TryGetValue(string key, out Peer value)
+        public bool TryGetValue(string key, out PeerRegistryEntry value)
         {
             return _registry.TryGetValue(key, out value);
         }
 
-        public void Add(KeyValuePair<string, Peer> item)
+        public void Add(KeyValuePair<string, PeerRegistryEntry> item)
         {
             _registry.Add(item.Key, item.Value);
         }
@@ -65,23 +65,23 @@ namespace CommMaster.ClientManagement
             _registry.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, Peer> item)
+        public bool Contains(KeyValuePair<string, PeerRegistryEntry> item)
         {
             return _registry.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, Peer>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, PeerRegistryEntry>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
             //_registry.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<string, Peer> item)
+        public bool Remove(KeyValuePair<string, PeerRegistryEntry> item)
         {
             return _registry.Remove(item.Key);
         }
 
-        public IEnumerator<KeyValuePair<string, Peer>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, PeerRegistryEntry>> GetEnumerator()
         {
             return _registry.GetEnumerator();
         }

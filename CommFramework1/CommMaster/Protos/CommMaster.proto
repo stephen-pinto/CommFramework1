@@ -10,7 +10,7 @@ service CommMasterService {
 }
 
 message RegisterationRequest {
-  string clientId = 1;
+  string registrationId = 1;
   string type = 2;
   string name = 3;
   string address = 4;  
@@ -18,7 +18,7 @@ message RegisterationRequest {
 }
 
 message RegisterationResponse {
-  string clientId = 1;
+  string registrationId = 1;
   string status = 2;
   string message = 3;
 }

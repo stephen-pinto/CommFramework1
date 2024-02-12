@@ -8,7 +8,7 @@ namespace CommMaster.Extensions
         public static Peer ToPeer(this RegisterationRequest request)
         {
             return new Peer(
-                request.ClientId,
+                request.RegistrationId,
                 request.Name,
                 request.Type,
                 request.Address,
