@@ -12,7 +12,7 @@ service CommService {
 }
 
 message RegisterationRequest {
-  string id = 1;
+  string clientId = 1;
   string type = 2;
   string name = 3;
   string address = 4;
@@ -21,10 +21,11 @@ message RegisterationRequest {
 }
 
 message RegisterationResponse {
-  string id = 1;
+  string clientId = 1;
   string status = 2;
   string message = 3;
 }
+
 
 message Message {
   string to = 1;

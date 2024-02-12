@@ -1,18 +1,29 @@
 ﻿using CommServer;
+using CommServerLib.ClientManagement;
 using Grpc.Core;
 
 namespace CommServerLib
 {
     public class MainServer : CommService.CommServiceBase
     {
+        IClientRegistry _registry;
+
+        internal MainServer(IClientRegistry registry)
+        {
+            _registry = registry;
+        }
+
         public override Task<RegisterationResponse> Register(RegisterationRequest request, ServerCallContext context)
         {
-            return base.Register(request, context);
+            request.ClientId = Guid.NewGuid().ToString();
+            _registry.Add(Guid.NewGuid().ToString(), request.ToClient());
+            return new Task<RegisterationResponse>(() => new RegisterationResponse { ClientId = request.ClientId, Status = "Success" });
         }
 
         public override Task<RegisterationResponse> Unregister(RegisterationRequest request, ServerCallContext context)
         {
-            return base.Unregister(request, context);
+            _registry.Remove(request.ClientId);
+            return new Task<RegisterationResponse>(() => new RegisterationResponse { ClientId = request.ClientId, Status = "Success" });
         }
 
         public override Task<Message> MakeRequest(Message request, ServerCallContext context)
@@ -23,6 +34,6 @@ namespace CommServerLib
         public override Task<Message> Notify(Message request, ServerCallContext context)
         {
             return base.Notify(request, context);
-        }        
+        }
     }
 }
