@@ -1,7 +1,7 @@
 ﻿using Grpc.Net.Client;
 using System.Security.Cryptography.X509Certificates;
 
-namespace CommClientBase
+namespace CommPeerClientBase
 {
     internal class RpcChannelProvider
     {

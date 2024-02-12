@@ -1,13 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "CommClient";
+package CommShared;
 
-package CommClient;
-
-service CommService {
-  rpc MakeRequest (Message) returns (Message);
-  rpc Notify (Message) returns (Message);
-}
+option csharp_namespace = "CommServices.CommShared";
 
 message Message {
   string to = 1;

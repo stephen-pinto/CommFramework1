@@ -1,11 +1,11 @@
-﻿using Grpc.Core;
+﻿//using PeerMessage = CommPeer.Message;
 
-namespace CommMaster.ClientManagement
-{
-    public interface IClientHandle
-    {
-        Task<CommClient.Message> MakeRequest(CommClient.Message request);
+//namespace CommMaster.ClientManagement
+//{
+//    public interface IClientHandle
+//    {
+//        Task<PeerMessage> MakeRequest(PeerMessage request);
 
-        Task<CommClient.Message> Notify(CommClient.Message request);
-    }
-}
+//        Task<PeerMessage> Notify(PeerMessage request);
+//    }
+//}

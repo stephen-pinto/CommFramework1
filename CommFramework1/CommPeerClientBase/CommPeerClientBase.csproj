@@ -17,16 +17,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\CommPeerClientBase\CommPeerClientBase.csproj" />
-	</ItemGroup>
-
-	<PropertyGroup>
-		<SharedProtos>..\CommPeerClientBase\Protos</SharedProtos>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\CommMaster.proto" GrpcServices="Server" />
-		<Protobuf Include="$(SharedProtos)\CommSharedTypes.proto" GrpcServices="None" Link="Protos\CommSharedTypes.proto"/>
+		<Protobuf Include="Protos\CommSharedTypes.proto"/>
+		<Protobuf Include="Protos\CommPeer.proto" GrpcServices="Client" />
 	</ItemGroup>
 
 </Project>

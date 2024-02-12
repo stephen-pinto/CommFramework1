@@ -1,12 +1,12 @@
-﻿using CommClient;
+﻿using CommServices.CommPeer;
 
-namespace CommClientBase
+namespace CommPeerClientBase
 {
-    internal class ClientHandler : IClientHandler
+    internal class DefaultClientHandler : IClientHandler
     {
-        private CommService.CommServiceClient? _client;
+        private CommPeerService.CommPeerServiceClient? _client;
 
-        public CommService.CommServiceClient Client
+        public CommPeerService.CommPeerServiceClient Client
         {
             get
             {
@@ -20,7 +20,7 @@ namespace CommClientBase
         {
             var channelProvider = new RpcChannelProvider();
             var channel = channelProvider.GetChannel(address);
-            _client = new CommService.CommServiceClient(channel);
+            _client = new CommPeerService.CommPeerServiceClient(channel);
         }
     }
 }
