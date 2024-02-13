@@ -14,7 +14,8 @@ namespace GrpcNetPeer
 
         public override Task<Message> MakeRequest(Message request, ServerCallContext context)
         {
-            Debug.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
+            Console.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
+            
             return Task.FromResult(new Message
             {
                 From = "Peer",
@@ -25,7 +26,7 @@ namespace GrpcNetPeer
 
         public override Task<Message> Notify(Message request, ServerCallContext context)
         {
-            Debug.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
+            Console.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
 
             return Task.FromResult(new Message
             {

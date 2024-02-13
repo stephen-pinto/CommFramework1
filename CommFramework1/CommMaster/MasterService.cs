@@ -2,6 +2,7 @@
 using CommMaster.Extensions;
 using CommServices.CommMaster;
 using Grpc.Core;
+using System.Diagnostics;
 
 namespace CommMaster
 {
@@ -22,7 +23,12 @@ namespace CommMaster
             var handle = _resolver.GetHandle(request);
             _registry.Add(Guid.NewGuid().ToString(), new PeerRegistryEntry(request.RegistrationId, request.ToPeer(), handle));
 
-            return new Task<RegisterationResponse>(() => new RegisterationResponse
+            Debug.WriteLine($"Registered peer {request.Name} with id {request.RegistrationId}");
+
+            //FIXME: Return another id as regid beacause it can be misidentified by another client.
+            //Possibly try to use jwt token for registration id which can also be used for secure communication.
+
+            return Task.FromResult(new RegisterationResponse
             {
                 RegistrationId = request.RegistrationId,
                 Status = "Success"
@@ -33,7 +39,9 @@ namespace CommMaster
         {
             _registry.Remove(request.RegistrationId);
 
-            return new Task<RegisterationResponse>(() => new RegisterationResponse
+            Debug.WriteLine($"Unregistered peer with id {request.RegistrationId}");
+
+            return Task.FromResult(new RegisterationResponse
             {
                 RegistrationId = request.RegistrationId,
                 Status = "Success"

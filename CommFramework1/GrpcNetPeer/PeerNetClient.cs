@@ -9,10 +9,11 @@ namespace GrpcNetPeer
     internal class PeerNetClient
     {
         private readonly CommPeerService.CommPeerServiceClient _client;
-        private readonly CommMasterService.CommMasterServiceClient _master;        
+        private readonly CommMasterService.CommMasterServiceClient _master;
+        private string? _id;
 
         public PeerNetClient(
-            string masterAddress, 
+            string masterAddress,
             string masterClient)
         {
             var pchannel = GrpcChannel.ForAddress(masterClient, new GrpcChannelOptions
@@ -30,12 +31,22 @@ namespace GrpcNetPeer
 
         public void Register(string peerServiceAddress)
         {
-            _master.Register(new RegisterationRequest
+            var result = _master.Register(new RegisterationRequest
             {
                 Address = peerServiceAddress,
                 Name = "Peer1",
                 Type = "Grpc",
                 Properties = { { "OS", "Windows" }, { "Version", "10" } },
+            });
+
+            _id = result.RegistrationId;
+        }
+
+        public void UnRegister()
+        {
+            _master.Unregister(new RegisterationRequest
+            {
+                RegistrationId = _id
             });
         }
 
@@ -44,7 +55,7 @@ namespace GrpcNetPeer
             _client.MakeRequest(new Message { From = "Peer", To = "Master", Data = message });
         }
 
-        public void SendNotification(string message)
+        public void Notify(string message)
         {
             _client.MakeRequest(new Message { From = "Peer", To = "Master", Data = message });
         }

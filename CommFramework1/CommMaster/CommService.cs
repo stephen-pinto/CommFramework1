@@ -8,7 +8,7 @@ namespace CommMaster
     public class CommService
     {
         private readonly IPeerRegistry _clientRegistry;
-        private ManualResetEvent resetEvent = new ManualResetEvent(false);
+        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
         private Task? _masterTask;
         private Task? _peerTask;
 
@@ -25,13 +25,17 @@ namespace CommMaster
 
         public void Stop()
         {
-            resetEvent.Set();
+            _resetEvent.Set();
             Task.WaitAll(_masterTask!, _peerTask!);
         }
 
         public async Task StartMasterAsync()
         {
-            var resolver = new PeerHandlerResolver();
+            var resolver = new PeerHandlerResolver
+            {
+                { "Grpc", new GrpcPeerHandleFactory() }
+            };
+
             Server server = new Server
             {
                 Services = { CommMasterService.BindService(new MasterService(resolver, _clientRegistry)) },
@@ -42,9 +46,11 @@ namespace CommMaster
 
             System.Diagnostics.Debug.WriteLine($"Master server listening on port {50051}");
 
-            resetEvent.WaitOne();
-
-            await server.ShutdownAsync();
+            await Task.Factory.StartNew(() =>
+            {
+                _resetEvent.WaitOne();
+                server.ShutdownAsync().Wait();
+            });
         }
 
         public async Task StartPeerAsync()
@@ -59,9 +65,11 @@ namespace CommMaster
 
             System.Diagnostics.Debug.WriteLine($"Peer server listening on port {50052}");
 
-            resetEvent.WaitOne();
-
-            await server.ShutdownAsync();
+            await Task.Factory.StartNew(() =>
+            {
+                _resetEvent.WaitOne();
+                server.ShutdownAsync().Wait();
+            });
         }
 
         private SslServerCredentials GetSecureChannel()

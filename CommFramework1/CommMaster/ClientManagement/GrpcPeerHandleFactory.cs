@@ -1,4 +1,5 @@
-﻿using CommServices.CommMaster;
+﻿using CommMaster.PeerClient;
+using CommServices.CommMaster;
 
 namespace CommMaster.ClientManagement
 {
@@ -6,7 +7,7 @@ namespace CommMaster.ClientManagement
     {
         public IPeerHandle GetHandle(RegisterationRequest registerationRequest)
         {
-            throw new NotImplementedException();
+            return new GrpcPeer(registerationRequest.Address, new DefaultClientHandler());
         }
     }
 }
