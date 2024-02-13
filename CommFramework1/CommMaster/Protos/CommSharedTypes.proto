@@ -16,7 +16,9 @@ message Message {
 
 enum MessageType
 {
-  REQUEST = 0;
-  RESPONSE = 1;
-  NOTIFICATION = 2;
+  NONE = 0;
+  REQUEST = 1;
+  RESPONSE = 2;
+  NOTIFICATION = 3;
+  ERROR = 4;
 }

@@ -2,10 +2,10 @@
 
 namespace CommMaster.ClientManagement
 {
-    public interface IClientRegistry : IDictionary<string, PeerRegistryEntry>
+    public interface IPeerRegistry : IDictionary<string, PeerRegistryEntry>
     {}
 
-    public class PeerRegistry : IClientRegistry
+    public class PeerRegistry : IPeerRegistry
     {
         private Dictionary<string, PeerRegistryEntry> _registry;
 

@@ -6,11 +6,11 @@ using Grpc.Core;
 
 namespace CommMaster
 {
-    internal class PeerService : CommPeerService.CommPeerServiceBase
+    public class PeerService : CommPeerService.CommPeerServiceBase
     {
-        private readonly IClientRegistry _clientRegistry;
+        private readonly IPeerRegistry _clientRegistry;
 
-        public PeerService(IClientRegistry clientRegistry)
+        public PeerService(IPeerRegistry clientRegistry)
         {
             _clientRegistry = clientRegistry;
         }
