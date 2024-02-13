@@ -2,81 +2,77 @@
 using CommServices.CommMaster;
 using CommServices.CommPeer;
 using Grpc.Core;
+using System.Net.Sockets;
+using System.Net;
 
 namespace CommMaster
 {
     public class CommService
     {
         private readonly IPeerRegistry _clientRegistry;
-        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
-        private Task? _masterTask;
-        private Task? _peerTask;
+        private readonly string _serviceHost;
+        private readonly int _port;
+        private Server? _masterServer;
+        private Server? _peerServer;
+        private readonly PeerHandlerResolver _resolver;
 
-        public CommService()
+        private string Address => $"https://{_serviceHost}:{_port}";
+
+        public CommService(string serviceHost, int port)
         {
+            _serviceHost = serviceHost;
+            _port = port;
             _clientRegistry = new PeerRegistry();
+            _resolver = new PeerHandlerResolver
+            {
+                { "Grpc", new GrpcPeerHandleFactory() }
+            };
         }
 
         public void Start()
         {
-            _masterTask = StartMasterAsync();
-            _peerTask = StartPeerAsync();
+            //Setup Master Server
+            _masterServer = new Server
+            {
+                Services = { CommMasterService.BindService(new MasterService(_resolver, _clientRegistry)) },
+                Ports = { new ServerPort(_serviceHost, _port, GetSecureChannel()) }
+            };
+
+            _masterServer.Start();
+            System.Diagnostics.Debug.WriteLine($"Master server listening on port {_port}");
+
+            //Setup Peer Server
+            _peerServer = new Server
+            {
+                Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
+                Ports = { new ServerPort(_serviceHost, _port + 1, GetSecureChannel()) }
+            };
+
+            _peerServer.Start();
+            System.Diagnostics.Debug.WriteLine($"Peer server listening on port {_port + 1}");
         }
 
         public void Stop()
         {
-            _resetEvent.Set();
-            Task.WaitAll(_masterTask!, _peerTask!);
+            Task.WaitAll(_masterServer!.ShutdownAsync(), _peerServer!.ShutdownAsync());
         }
 
-        public async Task StartMasterAsync()
-        {
-            var resolver = new PeerHandlerResolver
-            {
-                { "Grpc", new GrpcPeerHandleFactory() }
-            };
-
-            Server server = new Server
-            {
-                Services = { CommMasterService.BindService(new MasterService(resolver, _clientRegistry)) },
-                Ports = { new ServerPort("localhost", 50051, GetSecureChannel()) }
-            };
-
-            server.Start();
-
-            System.Diagnostics.Debug.WriteLine($"Master server listening on port {50051}");
-
-            await Task.Factory.StartNew(() =>
-            {
-                _resetEvent.WaitOne();
-                server.ShutdownAsync().Wait();
-            });
-        }
-
-        public async Task StartPeerAsync()
-        {
-            Server server = new Server
-            {
-                Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
-                Ports = { new ServerPort("localhost", 50052, GetSecureChannel()) }
-            };
-
-            server.Start();
-
-            System.Diagnostics.Debug.WriteLine($"Peer server listening on port {50052}");
-
-            await Task.Factory.StartNew(() =>
-            {
-                _resetEvent.WaitOne();
-                server.ShutdownAsync().Wait();
-            });
-        }
-
+        //TODO: Move this to a central location
         private SslServerCredentials GetSecureChannel()
         {
             List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
             certificates.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
             return new SslServerCredentials(certificates);
+        }
+
+        //TODO: Move this to a utility class
+        private int FreeTcpPort()
+        {
+            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            int port = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
+            return port;
         }
     }
 }
