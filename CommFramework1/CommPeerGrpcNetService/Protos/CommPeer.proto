@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package CommPeer;
+
+import "Protos/CommSharedTypes.proto";
+
+option csharp_namespace = "CommServices.CommPeer";
+
+service CommPeerService {
+  rpc MakeRequest (CommShared.Message) returns (CommShared.Message);
+  rpc Notify (CommShared.Message) returns (CommShared.Message);
+}
