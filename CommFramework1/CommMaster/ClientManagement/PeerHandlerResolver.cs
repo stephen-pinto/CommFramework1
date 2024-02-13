@@ -1,22 +1,15 @@
-﻿using CommMaster.PeerClient;
-using CommServices.CommMaster;
+﻿using CommServices.CommMaster;
 
 namespace CommMaster.ClientManagement
 {
-    internal class PeerHandlerResolver
+    internal class PeerHandlerResolver : Dictionary<string, IPeerHandleFactory>
     {
         public IPeerHandle GetHandle(RegisterationRequest request)
         {
-            switch (request.Type)
-            {
-                case "Local":
-                    return null; //TODO: Replace with local handle
-                case "Web":
-                    return null; //TODO: Replace with socketio handle
-                case "Grpc":
-                default:
-                    return new GrpcPeer(request.Address, new DefaultClientHandler());
-            }
+            if(ContainsKey(request.Type))
+                return this[request.Type].GetHandle(request);
+
+            throw new NotSupportedException($"Peer type {request.Type} is not supported");
         }
     }
 }

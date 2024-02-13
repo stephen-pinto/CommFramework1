@@ -5,20 +5,21 @@ using Grpc.Core;
 
 namespace CommMaster
 {
-    internal class MasterService : CommMasterService.CommMasterServiceBase
+    public class MasterService : CommMasterService.CommMasterServiceBase
     {
-        private IClientRegistry _registry;
+        private readonly PeerHandlerResolver _resolver;
+        private readonly IClientRegistry _registry;
 
-        internal MasterService(IClientRegistry registry)
+        internal MasterService(PeerHandlerResolver resolver, IClientRegistry registry)
         {
+            _resolver = resolver;
             _registry = registry;
         }
 
         public override Task<RegisterationResponse> Register(RegisterationRequest request, ServerCallContext context)
         {
             request.RegistrationId = Guid.NewGuid().ToString();
-            PeerHandlerResolver resolver = new PeerHandlerResolver();
-            var handle = resolver.GetHandle(request);
+            var handle = _resolver.GetHandle(request);
             _registry.Add(Guid.NewGuid().ToString(), new PeerRegistryEntry(request.RegistrationId, request.ToPeer(), handle));
             return new Task<RegisterationResponse>(() => new RegisterationResponse { RegistrationId = request.RegistrationId, Status = "Success" });
         }

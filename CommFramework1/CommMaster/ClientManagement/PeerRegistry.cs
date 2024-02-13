@@ -3,8 +3,7 @@
 namespace CommMaster.ClientManagement
 {
     public interface IClientRegistry : IDictionary<string, PeerRegistryEntry>
-    {
-    }
+    {}
 
     public class PeerRegistry : IClientRegistry
     {
