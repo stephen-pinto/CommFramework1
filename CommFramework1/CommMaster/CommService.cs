@@ -9,9 +9,9 @@ namespace CommMaster
     {
         private readonly IPeerRegistry _clientRegistry;
         private ManualResetEvent resetEvent = new ManualResetEvent(false);
-        private Task _masterTask;
-        private Task _peerTask;
-        
+        private Task? _masterTask;
+        private Task? _peerTask;
+
         public CommService()
         {
             _clientRegistry = new PeerRegistry();
@@ -26,7 +26,7 @@ namespace CommMaster
         public void Stop()
         {
             resetEvent.Set();
-            Task.WaitAll(_masterTask, _peerTask);
+            Task.WaitAll(_masterTask!, _peerTask!);
         }
 
         public async Task StartMasterAsync()
@@ -35,7 +35,7 @@ namespace CommMaster
             Server server = new Server
             {
                 Services = { CommMasterService.BindService(new MasterService(resolver, _clientRegistry)) },
-                Ports = { new ServerPort("localhost", 50051, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("localhost", 50051, GetSecureChannel()) }
             };
 
             server.Start();
@@ -52,7 +52,7 @@ namespace CommMaster
             Server server = new Server
             {
                 Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
-                Ports = { new ServerPort("localhost", 50052, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("localhost", 50052, GetSecureChannel()) }
             };
 
             server.Start();
@@ -62,6 +62,13 @@ namespace CommMaster
             resetEvent.WaitOne();
 
             await server.ShutdownAsync();
+        }
+
+        private SslServerCredentials GetSecureChannel()
+        {
+            List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
+            certificates.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
+            return new SslServerCredentials(certificates);
         }
     }
 }
