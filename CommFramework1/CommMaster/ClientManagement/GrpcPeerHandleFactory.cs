@@ -1,5 +1,4 @@
-﻿using CommPeerGrpcNetService;
-using CommServices.CommMaster;
+﻿using CommServices.CommMaster;
 
 namespace CommMaster.ClientManagement
 {

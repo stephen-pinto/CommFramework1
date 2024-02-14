@@ -2,9 +2,8 @@
 using CommServices.CommMaster;
 using CommServices.CommPeer;
 using Grpc.Core;
-using System.Net.Sockets;
 using System.Net;
-using CommPeerGrpcNetService;
+using System.Net.Sockets;
 
 namespace CommMaster
 {
@@ -45,7 +44,7 @@ namespace CommMaster
             //Setup Peer Server
             _peerServer = new Server
             {
-                Services = { CommPeerService.BindService(new PeerService(_clientRegistry).Service) },
+                Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
                 Ports = { new ServerPort(_serviceHost, _port + 1, GetSecureChannel()) }
             };
 
