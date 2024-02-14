@@ -12,6 +12,7 @@ namespace CommMaster
     public class CommService
     {
         private readonly IPeerRegistry _clientRegistry;
+        private readonly IPeerMapper _peerMapper;
         private readonly string _serviceHost;
         private readonly int _port;
         private Server? _masterServer;
@@ -25,6 +26,8 @@ namespace CommMaster
             _serviceHost = serviceHost;
             _port = port;
             _clientRegistry = new PeerRegistry();
+            _peerMapper = new PeerMapper();
+            _peerMapper.AddCriteria(new DefaultPeerMappingCriteria(_clientRegistry));
             _resolver = new PeerClientResolver
             {
                 { "Grpc", new GrpcPeerClientFactory() }
@@ -46,7 +49,7 @@ namespace CommMaster
             //Setup Peer Server
             _peerServer = new Server
             {
-                Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
+                Services = { CommPeerService.BindService(new PeerService(_clientRegistry, _peerMapper)) },
                 Ports = { new ServerPort(_serviceHost, _port + 1, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
             };
 
@@ -57,16 +60,6 @@ namespace CommMaster
         public void Stop()
         {
             Task.WaitAll(_masterServer!.ShutdownAsync(), _peerServer!.ShutdownAsync());
-        }
-
-        //TODO: Move this to a utility class
-        private int FreeTcpPort()
-        {
-            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
-            l.Start();
-            int port = ((IPEndPoint)l.LocalEndpoint).Port;
-            l.Stop();
-            return port;
         }
     }
 }
