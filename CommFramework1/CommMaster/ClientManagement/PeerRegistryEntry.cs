@@ -1,4 +1,6 @@
-﻿namespace CommMaster.ClientManagement
+﻿using CommPeerGrpcNetService;
+
+namespace CommMaster.ClientManagement
 {
-    public record PeerRegistryEntry(string Id, Peer Peer, IPeerHandle Handle);
+    public record PeerRegistryEntry(string Id, Peer Peer, IPeerClient Handle);
 }

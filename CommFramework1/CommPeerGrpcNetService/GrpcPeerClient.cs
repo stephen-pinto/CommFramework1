@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace CommPeerGrpcNetService
 {
-    internal class GrpcPeerClient : IPeerClient
+    public class GrpcPeerClient : IPeerClient
     {
         private readonly CommPeerService.CommPeerServiceClient _client;
 
@@ -38,7 +38,7 @@ namespace CommPeerGrpcNetService
             {
                 chain!.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
                 chain.ChainPolicy.CustomTrustStore.Add(new X509Certificate2("C:\\certs\\CommServer.crt"));
-                return chain.Build(cert);
+                return chain.Build(cert!);
             };
 
             // Pass the client certificate so the server can authenticate the client

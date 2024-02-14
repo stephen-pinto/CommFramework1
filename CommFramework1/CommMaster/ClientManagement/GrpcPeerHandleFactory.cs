@@ -1,13 +1,13 @@
-﻿using CommMaster.PeerClient;
+﻿using CommPeerGrpcNetService;
 using CommServices.CommMaster;
 
 namespace CommMaster.ClientManagement
 {
-    internal class GrpcPeerHandleFactory : IPeerHandleFactory
+    internal class GrpcPeerHandleFactory : IPeerClientFactory
     {
-        public IPeerHandle GetHandle(RegisterationRequest registerationRequest)
+        public IPeerClient GetHandle(RegisterationRequest registerationRequest)
         {
-            return new GrpcPeer(registerationRequest.Address, new DefaultClientHandler());
+            return new GrpcPeerClient(registerationRequest.Address);
         }
     }
 }

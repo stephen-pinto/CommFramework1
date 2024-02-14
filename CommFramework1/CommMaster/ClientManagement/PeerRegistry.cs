@@ -51,7 +51,7 @@ namespace CommMaster.ClientManagement
 
         public bool TryGetValue(string key, out PeerRegistryEntry value)
         {
-            return _registry.TryGetValue(key, out value);
+            return _registry.TryGetValue(key, out value!);
         }
 
         public void Add(KeyValuePair<string, PeerRegistryEntry> item)

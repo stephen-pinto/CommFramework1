@@ -25,9 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\CommSharedTypes.proto" GrpcServices="None" />
-		<Protobuf Include="Protos\CommMaster.proto" GrpcServices="Server" />		
-		<Protobuf Include="Protos\CommPeer.proto" GrpcServices="Both" />
+		<Protobuf Include="Protos\CommMaster.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 </Project>

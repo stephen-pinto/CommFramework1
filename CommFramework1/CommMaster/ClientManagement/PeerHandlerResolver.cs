@@ -1,10 +1,11 @@
-﻿using CommServices.CommMaster;
+﻿using CommPeerGrpcNetService;
+using CommServices.CommMaster;
 
 namespace CommMaster.ClientManagement
 {
-    internal class PeerHandlerResolver : Dictionary<string, IPeerHandleFactory>
+    internal class PeerHandlerResolver : Dictionary<string, IPeerClientFactory>
     {
-        public IPeerHandle GetHandle(RegisterationRequest request)
+        public IPeerClient GetHandle(RegisterationRequest request)
         {
             if(ContainsKey(request.Type))
                 return this[request.Type].GetHandle(request);
