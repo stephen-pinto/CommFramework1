@@ -1,4 +1,5 @@
 ﻿using CommMaster.PeerClient;
+using CommPeerServices.Base.Client;
 
 namespace CommMaster.PeerManagement
 {

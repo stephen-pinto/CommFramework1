@@ -1,7 +1,7 @@
-﻿using CommServices.CommPeer;
+﻿using CommPeerServices.Base.Client;
+using CommServices.CommPeer;
 using CommServices.CommShared;
 using Grpc.Net.Client;
-using System.Security.Cryptography.X509Certificates;
 
 namespace CommMaster.PeerClient
 {

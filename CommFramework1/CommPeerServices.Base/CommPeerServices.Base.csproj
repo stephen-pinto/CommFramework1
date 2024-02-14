@@ -26,8 +26,4 @@
 		<Protobuf Include="Protos\CommMaster.proto" GrpcServices="Both" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Util\" />
-	</ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
-﻿using CommMaster.Util;
+﻿using CommPeerServices.Base.Client;
+using CommPeerServices.Base.Util;
 using CommServices.CommMaster;
 
 namespace CommMaster.PeerClient

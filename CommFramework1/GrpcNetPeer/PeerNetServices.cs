@@ -1,8 +1,5 @@
 ﻿using CommServices.CommPeer;
 using Grpc.Core;
-using Grpc.Net.Client;
-using Grpc.Net.Client.Balancer;
-using System.Net;
 
 namespace GrpcNetPeer
 {
