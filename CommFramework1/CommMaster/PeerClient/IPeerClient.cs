@@ -1,6 +1,6 @@
 ﻿using CommServices.CommShared;
 
-namespace CommMaster.ClientManagement
+namespace CommMaster.PeerClient
 {
     public interface IPeerClient
     {

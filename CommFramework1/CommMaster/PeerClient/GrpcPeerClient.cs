@@ -3,7 +3,7 @@ using CommServices.CommShared;
 using Grpc.Net.Client;
 using System.Security.Cryptography.X509Certificates;
 
-namespace CommMaster.ClientManagement
+namespace CommMaster.PeerClient
 {
     public class GrpcPeerClient : IPeerClient
     {

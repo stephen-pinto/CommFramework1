@@ -1,5 +1,5 @@
 ﻿using CommServices.CommMaster;
-using CommMaster.ClientManagement;
+using CommMaster.PeerClient;
 
 namespace CommMaster.Extensions
 {

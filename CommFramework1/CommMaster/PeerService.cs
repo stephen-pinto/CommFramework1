@@ -1,4 +1,4 @@
-﻿using CommMaster.ClientManagement;
+﻿using CommMaster.PeerManagement;
 using CommMaster.Exceptions;
 using CommServices.CommPeer;
 using CommServices.CommShared;

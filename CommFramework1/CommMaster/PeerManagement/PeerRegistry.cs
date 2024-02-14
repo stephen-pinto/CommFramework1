@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace CommMaster.ClientManagement
+namespace CommMaster.PeerManagement
 {
     public interface IPeerRegistry : IDictionary<string, PeerRegistryEntry>
     {}

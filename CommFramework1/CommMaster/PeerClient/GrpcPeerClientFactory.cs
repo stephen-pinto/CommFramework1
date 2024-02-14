@@ -1,8 +1,8 @@
 ﻿using CommServices.CommMaster;
 
-namespace CommMaster.ClientManagement
+namespace CommMaster.PeerClient
 {
-    internal class GrpcPeerHandleFactory : IPeerClientFactory
+    internal class GrpcPeerClientFactory : IPeerClientFactory
     {
         public IPeerClient GetHandle(RegisterationRequest registerationRequest)
         {

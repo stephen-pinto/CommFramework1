@@ -1,4 +1,5 @@
-﻿using CommMaster.ClientManagement;
+﻿using CommMaster.PeerClient;
+using CommMaster.PeerManagement;
 using CommServices.CommMaster;
 using CommServices.CommPeer;
 using Grpc.Core;
@@ -14,7 +15,7 @@ namespace CommMaster
         private readonly int _port;
         private Server? _masterServer;
         private Server? _peerServer;
-        private readonly PeerHandlerResolver _resolver;
+        private readonly PeerClientResolver _resolver;
 
         private string Address => $"https://{_serviceHost}:{_port}";
 
@@ -23,9 +24,9 @@ namespace CommMaster
             _serviceHost = serviceHost;
             _port = port;
             _clientRegistry = new PeerRegistry();
-            _resolver = new PeerHandlerResolver
+            _resolver = new PeerClientResolver
             {
-                { "Grpc", new GrpcPeerHandleFactory() }
+                { "Grpc", new GrpcPeerClientFactory() }
             };
         }
 

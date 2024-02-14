@@ -1,4 +1,4 @@
-﻿using CommMaster.ClientManagement;
+﻿using CommMaster.PeerManagement;
 using CommMaster.Extensions;
 using CommServices.CommMaster;
 using Grpc.Core;
@@ -8,10 +8,10 @@ namespace CommMaster
 {
     public class MasterService : CommMasterService.CommMasterServiceBase
     {
-        private readonly PeerHandlerResolver _resolver;
+        private readonly PeerClientResolver _resolver;
         private readonly IPeerRegistry _registry;
 
-        internal MasterService(PeerHandlerResolver resolver, IPeerRegistry registry)
+        internal MasterService(PeerClientResolver resolver, IPeerRegistry registry)
         {
             _resolver = resolver;
             _registry = registry;

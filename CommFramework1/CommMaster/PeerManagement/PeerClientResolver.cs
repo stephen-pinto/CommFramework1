@@ -1,8 +1,9 @@
-﻿using CommServices.CommMaster;
+﻿using CommMaster.PeerClient;
+using CommServices.CommMaster;
 
-namespace CommMaster.ClientManagement
+namespace CommMaster.PeerManagement
 {
-    internal class PeerHandlerResolver : Dictionary<string, IPeerClientFactory>
+    internal class PeerClientResolver : Dictionary<string, IPeerClientFactory>
     {
         public IPeerClient GetHandle(RegisterationRequest request)
         {
