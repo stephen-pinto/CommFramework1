@@ -1,5 +1,6 @@
 ﻿using CommMaster.PeerClient;
 using CommMaster.PeerManagement;
+using CommMaster.Util;
 using CommServices.CommMaster;
 using CommServices.CommPeer;
 using Grpc.Core;
@@ -36,7 +37,7 @@ namespace CommMaster
             _masterServer = new Server
             {
                 Services = { CommMasterService.BindService(new MasterService(_resolver, _clientRegistry)) },
-                Ports = { new ServerPort(_serviceHost, _port, GetSecureChannel()) }
+                Ports = { new ServerPort(_serviceHost, _port, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
             };
 
             _masterServer.Start();
@@ -46,7 +47,7 @@ namespace CommMaster
             _peerServer = new Server
             {
                 Services = { CommPeerService.BindService(new PeerService(_clientRegistry)) },
-                Ports = { new ServerPort(_serviceHost, _port + 1, GetSecureChannel()) }
+                Ports = { new ServerPort(_serviceHost, _port + 1, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
             };
 
             _peerServer.Start();
@@ -56,14 +57,6 @@ namespace CommMaster
         public void Stop()
         {
             Task.WaitAll(_masterServer!.ShutdownAsync(), _peerServer!.ShutdownAsync());
-        }
-
-        //TODO: Move this to a central location
-        private SslServerCredentials GetSecureChannel()
-        {
-            List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
-            certificates.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
-            return new SslServerCredentials(certificates);
         }
 
         //TODO: Move this to a utility class
