@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommMaster\CommMaster.csproj" />
+    <ProjectReference Include="..\SignalRPeerService\SignalRPeerService.csproj" />
   </ItemGroup>
 
 </Project>
