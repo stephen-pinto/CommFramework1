@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientTest", "ClientTest\Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRPeerService", "SignalRPeerService\SignalRPeerService.csproj", "{C798D3FE-2EE7-4CFE-B05E-8CF6FBF4E013}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommPeerServices.Base", "CommPeerServices.Base\CommPeerServices.Base.csproj", "{E8F78789-B1BF-47FD-AEE3-F615BA5F450D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{C798D3FE-2EE7-4CFE-B05E-8CF6FBF4E013}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C798D3FE-2EE7-4CFE-B05E-8CF6FBF4E013}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C798D3FE-2EE7-4CFE-B05E-8CF6FBF4E013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8F78789-B1BF-47FD-AEE3-F615BA5F450D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8F78789-B1BF-47FD-AEE3-F615BA5F450D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8F78789-B1BF-47FD-AEE3-F615BA5F450D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8F78789-B1BF-47FD-AEE3-F615BA5F450D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
