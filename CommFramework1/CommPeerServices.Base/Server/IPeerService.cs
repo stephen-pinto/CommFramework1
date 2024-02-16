@@ -1,5 +1,4 @@
 ﻿using CommPeerServices.Base.Client;
-using CommServices.CommShared;
 
 namespace CommPeerServices.Base.Server
 {

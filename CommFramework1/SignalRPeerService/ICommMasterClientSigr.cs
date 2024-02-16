@@ -2,7 +2,7 @@
 {
     public interface ICommMasterClientSigr
     {
-        Task<RegisterationResponseSigr> Register(RegisterationRequestSigr request);
-        Task<RegisterationResponseSigr> Unregister(RegisterationRequestSigr request);
+        Task Register(RegisterationRequestSigr request);
+        Task Unregister(RegisterationRequestSigr request);
     }   
 }
