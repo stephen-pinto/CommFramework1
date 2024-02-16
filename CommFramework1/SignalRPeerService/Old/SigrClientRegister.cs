@@ -1,7 +1,7 @@
 ﻿using CommPeerServices.Base.Client;
 using Microsoft.AspNetCore.SignalR;
 
-namespace SignalRPeerService
+namespace SignalRPeerService.Old
 {
     internal class SigrClientRegister
     {

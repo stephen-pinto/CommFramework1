@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalRPeerService.Old;
 
 namespace SignalRPeerService
 {
@@ -37,7 +38,7 @@ namespace SignalRPeerService
         public async Task Unregister(RegisterationRequestSigr request)
         {
             Console.WriteLine($"Unregistering {Context.ConnectionId}");
-            
+
             //return Task.FromResult(new RegisterationResponseSigr
             //{
             //    RegistrationId = Guid.NewGuid().ToString(),
@@ -56,7 +57,7 @@ namespace SignalRPeerService
             //return Task.FromResult(new MessageSigr(null, null, null, null, null, null, null));
         }
 
-        public async Task SendRequestResponse(MessageSigr message)
+        public async Task SendMakeRequestResponse(MessageSigr message)
         {
             //Console.WriteLine($"Sending response {message.Id}");
             //await Clients.Client(message.SenderId).SendAsync("ReceiveResponse", message);

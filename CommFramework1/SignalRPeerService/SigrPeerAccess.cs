@@ -1,6 +1,6 @@
 ﻿namespace SignalRPeerService
 {
-    internal interface ISigrClientRegister
+    internal class SigrPeerAccess
     {
     }
 }

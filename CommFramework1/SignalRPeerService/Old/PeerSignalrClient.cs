@@ -3,7 +3,7 @@ using CommPeerServices.Base.Server;
 using CommServices.CommShared;
 using Microsoft.AspNetCore.SignalR;
 
-namespace SignalRPeerService
+namespace SignalRPeerService.Old
 {
     public class PeerSignalrClient : IPeerClient
     {

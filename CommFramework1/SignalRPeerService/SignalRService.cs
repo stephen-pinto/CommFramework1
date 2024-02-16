@@ -15,7 +15,7 @@ namespace SignalRPeerService
                 {
                     builder.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed((_) => true).AllowCredentials();
                 }));
-            builder.Services.AddSignalR();            
+            builder.Services.AddSignalR();
             _app = builder.Build();
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();
