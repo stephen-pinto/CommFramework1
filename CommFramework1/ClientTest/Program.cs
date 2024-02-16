@@ -2,9 +2,7 @@
 using GrpcNetPeer;
 
 internal class Program
-{
-    
-
+{    
     private static void Main(string[] args)
     {
         Program pg = new Program();

@@ -45,23 +45,6 @@ namespace GrpcNetPeer
             Task.WaitAll([task1!, task2!]);
         }
 
-        //public async Task<Message> MakeRequest(Message message)
-        //{
-        //    Console.WriteLine($"Received request from {message.From} to {message.To} with body = {message.Data}");
-        //    return await Task.FromResult(new Message
-        //    {
-        //        From = "Peer",
-        //        To = message.From,
-        //        Data = "Successfully received request: " + message.Data
-        //    });
-        //}
-
-        //public async Task<Empty> Notify(Message message)
-        //{
-        //    Console.WriteLine($"Received request from {message.From} to {message.To} with body = {message.Data}");
-        //    return await Task.FromResult(new Empty());
-        //}
-
         private SslServerCredentials GetSecureChannel()
         {
             List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
