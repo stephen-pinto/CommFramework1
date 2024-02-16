@@ -23,7 +23,7 @@ namespace SignalRPeerService
             throw new NotImplementedException();
         }
 
-        public Task<Message> Notify(Message message)
+        public Task<Empty> Notify(Message message)
         {
             //TODO: await strategy
             MessageSigr msg = message;

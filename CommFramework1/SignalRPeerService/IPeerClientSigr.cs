@@ -1,9 +1,11 @@
 ﻿namespace SignalRPeerService
 {
+    public delegate Task<RegisterationResponseSigr> RegistererDelegate(RegisterationRequestSigr request);
+    public delegate Task<MessageSigr> RequestDelegate(MessageSigr message);
+
     public interface IPeerClientSigr
     {
-        Task<MessageSigr> MakeRequest(MessageSigr message);
-
-        Task<MessageSigr> Notify(MessageSigr message);
+        //Task MakeRequest(MessageSigr message);
+        //Task Notify(MessageSigr message);
     }
 }

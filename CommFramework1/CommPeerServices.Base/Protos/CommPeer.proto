@@ -8,5 +8,5 @@ option csharp_namespace = "CommServices.CommPeer";
 
 service CommPeerService {
   rpc MakeRequest (CommShared.Message) returns (CommShared.Message);
-  rpc Notify (CommShared.Message) returns (CommShared.Message);
+  rpc Notify (CommShared.Message) returns (CommShared.Empty);
 }

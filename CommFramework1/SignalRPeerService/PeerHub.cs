@@ -2,9 +2,6 @@
 
 namespace SignalRPeerService
 {
-    public delegate Task<RegisterationResponseSigr> RegistererDelegate(RegisterationRequestSigr request);
-    public delegate Task<MessageSigr> RequestDelegate(MessageSigr message);
-
     public class PeerHub : Hub, IPeerClientSigr, ICommMasterClientSigr
     {
         private readonly RegistererDelegate _registerHandler;
@@ -51,10 +48,10 @@ namespace SignalRPeerService
             //return Task.FromResult(new MessageSigr(null, null, null, null, null, null, null));
         }
 
-        public async Task<MessageSigr> Notify(MessageSigr message)
+        public async Task Notify(MessageSigr message)
         {
             Console.WriteLine($"Notifying {message.Id}");
-            return await _notificationHandler(message);
+            await _notificationHandler(message);
             //return Task.FromResult(new MessageSigr(null, null, null, null, null, null, null));
         }
     }

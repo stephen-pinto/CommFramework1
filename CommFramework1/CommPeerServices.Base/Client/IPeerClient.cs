@@ -6,6 +6,6 @@ namespace CommPeerServices.Base.Client
     {
         Task<Message> MakeRequest(Message message);
 
-        Task<Message> Notify(Message message);
+        Task<Empty> Notify(Message message);
     }
 }

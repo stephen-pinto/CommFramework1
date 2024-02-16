@@ -30,9 +30,9 @@ namespace CommMaster.PeerClient
             return await _client.MakeRequestAsync(message);
         }
 
-        public async Task<Message> Notify(Message message)
+        public async Task<Empty> Notify(Message message)
         {
-            return await _client.MakeRequestAsync(message);
+            return await _client.NotifyAsync(message);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using CommServices.CommPeer;
 using CommServices.CommShared;
 using Grpc.Core;
-using System.Diagnostics;
 
 namespace GrpcNetPeer
 {
@@ -24,16 +23,10 @@ namespace GrpcNetPeer
             });
         }
 
-        public override Task<Message> Notify(Message request, ServerCallContext context)
+        public override Task<Empty> Notify(Message request, ServerCallContext context)
         {
             Console.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
-
-            return Task.FromResult(new Message
-            {
-                From = "Peer",
-                To = request.From,
-                Data = "Successfully received notification: " + request.Data
-            });
+            return Task.FromResult(new Empty());
         }
     }
 }
