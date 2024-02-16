@@ -2,7 +2,7 @@
 using GrpcNetPeer;
 
 Console.WriteLine("Welcome to Peer1 service!");
-PeerNetServices services = new PeerNetServices();
+GrpcPeerNetService services = new GrpcPeerNetService();
 services.Start("https://localhost:50051", "https://localhost:50052", "https://localhost:50055");
 
 Console.WriteLine("Press any key to test message send");

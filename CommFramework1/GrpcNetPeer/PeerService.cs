@@ -1,4 +1,5 @@
-﻿using CommServices.CommPeer;
+﻿using CommPeerServices.Base.Client;
+using CommServices.CommPeer;
 using CommServices.CommShared;
 using Grpc.Core;
 
@@ -6,27 +7,23 @@ namespace GrpcNetPeer
 {
     public class PeerService : CommPeerService.CommPeerServiceBase
     {
-        public PeerService()
-        {
+        private readonly MakeRequestDelegate _makeRequestHandler;
+        private readonly NotifyDelegate _notifyHandler;
 
+        public PeerService(MakeRequestDelegate makeRequestHandler, NotifyDelegate notifyHandler)
+        {
+            _makeRequestHandler = makeRequestHandler;
+            _notifyHandler = notifyHandler;
         }
 
-        public override Task<Message> MakeRequest(Message request, ServerCallContext context)
+        public override async Task<Message> MakeRequest(Message message, ServerCallContext context)
         {
-            Console.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
-            
-            return Task.FromResult(new Message
-            {
-                From = "Peer",
-                To = request.From,
-                Data = "Successfully received request: " + request.Data
-            });
+            return await _makeRequestHandler(message);
         }
 
-        public override Task<Empty> Notify(Message request, ServerCallContext context)
+        public override async Task<Empty> Notify(Message message, ServerCallContext context)
         {
-            Console.WriteLine($"Received request from {request.From} to {request.To} with body = {request.Data}");
-            return Task.FromResult(new Empty());
+            return await _notifyHandler(message);
         }
     }
 }

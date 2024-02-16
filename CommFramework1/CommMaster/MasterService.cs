@@ -7,9 +7,9 @@ namespace CommMaster
     public class MasterService : CommMasterService.CommMasterServiceBase
     {
         private readonly RegisterDelegate _registerHandler;
-        private readonly UnRegisterDelegate _unregisterHandler;
+        private readonly UnregisterDelegate _unregisterHandler;
 
-        public MasterService(RegisterDelegate register, UnRegisterDelegate unregister)
+        public MasterService(RegisterDelegate register, UnregisterDelegate unregister)
         {
             _registerHandler = register;
             _unregisterHandler = unregister;

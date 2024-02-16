@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace GrpcNetPeer
 {
-    internal class PeerNetClient
+    internal class PeerNetClient : IMainPeerClient
     {
         private readonly CommPeerService.CommPeerServiceClient _client;
         private readonly CommMasterService.CommMasterServiceClient _master;
@@ -29,35 +29,32 @@ namespace GrpcNetPeer
             _master = new CommMasterService.CommMasterServiceClient(mchannel);
         }
 
-        public void Register(string peerServiceAddress)
+        public async Task<Message> MakeRequest(Message message)
         {
-            var result = _master.Register(new RegisterationRequest
-            {
-                Address = peerServiceAddress,
-                Name = "Peer1",
-                Type = "Grpc",
-                Properties = { { "OS", "Windows" }, { "Version", "10" } },
-            });
+            message.From = _id;
+            return await _client.MakeRequestAsync(message).ConfigureAwait(false);
+            //return await _client.MakeRequestAsync(new Message { From = _id, To = "Master", Data = "" }).ConfigureAwait(false);
+        }
 
+        public async Task<Empty> Notify(Message message)
+        {
+            message.From = _id;
+            return await _client.NotifyAsync(message).ConfigureAwait(false);
+            //return await _client.NotifyAsync(new Message { From = _id, To = "Master", Data = "" }).ConfigureAwait(false);
+        }
+
+        public async Task<RegisterationResponse> Register(RegisterationRequest request)
+        {
+            var result = await _master.RegisterAsync(request);
             _id = result.RegistrationId;
+            return result;
         }
 
-        public void UnRegister()
+        public async Task<RegisterationResponse> Unregister(RegisterationRequest request)
         {
-            _master.Unregister(new RegisterationRequest
-            {
-                RegistrationId = _id
-            });
-        }
-
-        public void MakeRequest(string message)
-        {
-            _client.MakeRequest(new Message { From = "Peer", To = "Master", Data = message });
-        }
-
-        public void Notify(string message)
-        {
-            _client.MakeRequest(new Message { From = "Peer", To = "Master", Data = message });
+            _id = null;
+            request.RegistrationId = _id;
+            return await _master.UnregisterAsync(request);            
         }
 
         private HttpClient GetConfiguredClient()

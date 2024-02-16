@@ -4,7 +4,7 @@ using Grpc.Core;
 namespace CommPeerServices.Base.Client
 {
     public delegate Task<RegisterationResponse> RegisterDelegate(RegisterationRequest request);
-    public delegate Task<RegisterationResponse> UnRegisterDelegate(RegisterationRequest request);
+    public delegate Task<RegisterationResponse> UnregisterDelegate(RegisterationRequest request);
 
     public interface IMasterClient
     {
