@@ -8,12 +8,12 @@ using Grpc.Core;
 
 namespace CommMaster
 {
-    public class PeerService : CommPeerService.CommPeerServiceBase, IPeerService
+    public class MainPeerService : CommPeerService.CommPeerServiceBase, IPeerService
     {
         private readonly IPeerRegistry _clientRegistry;
         private readonly IPeerMapper _peerMapper;
 
-        public PeerService(IPeerRegistry clientRegistry, IPeerMapper peerMapper)
+        public MainPeerService(IPeerRegistry clientRegistry, IPeerMapper peerMapper)
         {
             _clientRegistry = clientRegistry;
             _peerMapper = peerMapper;

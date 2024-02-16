@@ -47,7 +47,7 @@ namespace CommMaster
             //Setup Peer Server
             _peerServer = new Server
             {
-                Services = { CommPeerService.BindService(new PeerService(_clientRegistry, _peerMapper)) },
+                Services = { CommPeerService.BindService(new MainPeerService(_clientRegistry, _peerMapper)) },
                 Ports = { new ServerPort(_serviceHost, _port + 1, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
             };
 
