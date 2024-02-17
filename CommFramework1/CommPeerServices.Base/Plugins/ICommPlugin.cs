@@ -1,4 +1,6 @@
-﻿namespace CommPeerServices.Base.Plugins
+﻿using CommPeerServices.Base.Client;
+
+namespace CommPeerServices.Base.Plugins
 {
     public interface ICommPlugin
     {
@@ -7,5 +9,7 @@
         public void Load();
 
         public void Unload();
+
+        public IPeerClientFactory GetClientFactory();
     }
 }

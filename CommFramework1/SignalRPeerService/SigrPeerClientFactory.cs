@@ -1,21 +1,22 @@
 ﻿using CommPeerServices.Base.Client;
 using CommServices.CommMaster;
+using Microsoft.Extensions.DependencyInjection;
 using SignalRPeerService.Interfaces;
 
 namespace SignalRPeerService
 {
     public class SigrPeerClientFactory : IPeerClientFactory
     {
-        private readonly ISigrPeerClientFactory _sigrPeerClientFactory;
+        private readonly ISigrPeerClientStore _sigrPeerClientStore;
 
-        public SigrPeerClientFactory(ISigrPeerClientFactory sigrPeerClientFactory)
+        public SigrPeerClientFactory(IServiceProvider serviceProvider)
         {
-            _sigrPeerClientFactory = sigrPeerClientFactory;
+            _sigrPeerClientStore = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
         }
 
         public IPeerClient GetHandle(RegisterationRequest registerationRequest)
         {
-            var client = _sigrPeerClientFactory.GetClient(registerationRequest.Properties[CommonConstants.SigrReferenceTag]);
+            var client = _sigrPeerClientStore.GetClient(registerationRequest.Properties[CommonConstants.SigrReferenceTag]);
             return client;
         }
     }

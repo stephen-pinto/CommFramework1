@@ -7,22 +7,17 @@ namespace SignalRPeerService
 {
     public class SigrPeerBridge
     {
-        private readonly PeerHub? _peerHub;
-        private readonly ISigrPeerClientFactory _sigrPeerClientFactory;
-        private readonly IMasterClient? _masterClient;
-        private readonly IPeerClient? _mainPeerClient;
+        private readonly PeerHub _peerHub;
+        private readonly ISigrPeerClientStore _sigrPeerClientFactory;
+        private readonly IPeerClient _mainPeerClient;
 
         public SigrPeerBridge(IServiceProvider serviceProvider)
         {
-            _peerHub = serviceProvider.GetService<PeerHub>();
+            _peerHub = serviceProvider.GetService<PeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
             _peerHub!.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
-            var responseAwaiter = serviceProvider.GetService<ResponseAwaiter>();
-            _masterClient = serviceProvider.GetService<IMasterClient>();
-            _mainPeerClient = serviceProvider.GetService<IPeerClient>();
-            _sigrPeerClientFactory = new DefaultSigrPeerClientFactory(
-                _peerHub, 
-                _masterClient!, 
-                responseAwaiter!);
+
+            _mainPeerClient = serviceProvider.GetService<IPeerClient>() ?? throw new TypeInitializationException("IPeerClient not initialized", null);
+            _sigrPeerClientFactory = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
         }
 
         private Task RegisterHandler(string connectionId, RegisterationRequestSigr request)

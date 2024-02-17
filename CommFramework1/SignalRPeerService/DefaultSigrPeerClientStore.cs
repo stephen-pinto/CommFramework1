@@ -1,25 +1,23 @@
 ﻿using CommPeerServices.Base.Client;
 using CommServices.CommMaster;
+using Microsoft.Extensions.DependencyInjection;
 using SignalRPeerService.Interfaces;
 using SignalRPeerService.Types;
 
 namespace SignalRPeerService
 {
-    public class DefaultSigrPeerClientFactory : ISigrPeerClientFactory
+    public class DefaultSigrPeerClientStore : ISigrPeerClientStore
     {
         private readonly IMasterClient _masterClient;
         private readonly PeerHub _hub;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly Dictionary<string, IPeerClient> _clients;
 
-        public DefaultSigrPeerClientFactory(
-            PeerHub hub,
-            IMasterClient masterClient,
-            ResponseAwaiter responseAwaiter)
+        public DefaultSigrPeerClientStore(IServiceProvider serviceProvider)
         {
-            _hub = hub;
-            _masterClient = masterClient;
-            _responseAwaiter = responseAwaiter;
+            _hub = serviceProvider.GetService<PeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
+            _masterClient = serviceProvider.GetService<IMasterClient>() ?? throw new TypeInitializationException("IMasterClient not initialized", null);
+            _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>() ?? throw new TypeInitializationException("ResponseAwaiter not initialized", null);
             _clients = new Dictionary<string, IPeerClient>();
         }
 

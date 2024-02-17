@@ -3,7 +3,7 @@ using SignalRPeerService.Types;
 
 namespace SignalRPeerService.Interfaces
 {
-    public interface ISigrPeerClientFactory
+    public interface ISigrPeerClientStore
     {
         IPeerClient GetClient(string connectionId);
         IPeerClient AddNewRegisteredClient(string connectionId, RegisterationRequestSigr registration); 

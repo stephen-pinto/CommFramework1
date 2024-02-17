@@ -1,6 +1,8 @@
-﻿using CommPeerServices.Base.Plugins;
+﻿using CommPeerServices.Base.Client;
+using CommPeerServices.Base.Plugins;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using SignalRPeerService.Interfaces;
 
 namespace SignalRPeerService
 {
@@ -21,6 +23,8 @@ namespace SignalRPeerService
             builder.Services.AddSingleton<ResponseAwaiter>();
             builder.Services.AddSingleton(sconfig.MasterClient!);
             builder.Services.AddSingleton(sconfig.MainPeerClient!);
+            builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
+            builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
             _app = builder.Build();
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();
@@ -28,7 +32,6 @@ namespace SignalRPeerService
             _app.MapHub<PeerHub>("/peer");
             _app.UseCors("AllowAll");
             _app.Urls.Add("https://localhost:5001");
-            
         }
 
         public void Load()
@@ -39,6 +42,11 @@ namespace SignalRPeerService
         public void Unload()
         {
             _app!.StopAsync().Wait();
+        }
+
+        public IPeerClientFactory GetClientFactory()
+        {
+            return _app!.Services.GetService<IPeerClientFactory>()!;
         }
     }
 }
