@@ -32,6 +32,8 @@ namespace SignalRPeerService
         {
             var client = new SigrPeerClient(_hub, registration, connectionId, _responseAwaiter);
             RegisterationRequest registerationRequest = registration;
+            //TODO: Change this to something unique and different then connection id
+            registerationRequest.Properties.Add(CommonConstants.SigrReferenceTag, connectionId);
             var result = _masterClient.Register(registerationRequest).GetAwaiter().GetResult();
             if (result.Status != "Success")
                 throw new Exception("Registration failed");
