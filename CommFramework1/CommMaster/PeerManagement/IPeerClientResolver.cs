@@ -3,7 +3,7 @@ using CommServices.CommMaster;
 
 namespace CommMaster.PeerManagement
 {
-    internal interface IPeerHandlerResolver
+    public interface IPeerClientResolver
     {
         IPeerClient GetHandle(RegisterationRequest request);
     }

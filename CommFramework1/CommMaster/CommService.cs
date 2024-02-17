@@ -12,9 +12,9 @@ namespace CommMaster
     {
         private readonly IPeerRegistry _registry;
         private readonly IPeerMapper _peerMapper;
-        private readonly PeerClientResolver _resolver;
+        private readonly IPeerClientResolver _resolver;
 
-        public CommService(string serviceHost, int port, PeerClientResolver peerClientResolver)
+        public CommService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
         {
             _serviceHost = serviceHost;
             _port = port;
