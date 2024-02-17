@@ -1,4 +1,5 @@
 ﻿using CommPeerServices.Base.Client;
+using CommPeerServices.Base.Util;
 using CommServices.CommMaster;
 using CommServices.CommPeer;
 using Grpc.Core;
@@ -32,7 +33,7 @@ namespace GrpcNetPeer
             _server = new Server
             {
                 Services = { CommPeerService.BindService(new PeerService(makeRequestHandler, notifyHandler)) },
-                Ports = { new ServerPort("localhost", 50055, GetSecureChannel()) }
+                Ports = { new ServerPort("localhost", 50055, GrpcChannelSecurityHelper.GetSecureServerCredentials("C:\\certs\\CommServer.crt", "C:\\certs\\server.key")) }
             };
 
             _server.Start();
@@ -43,13 +44,6 @@ namespace GrpcNetPeer
             var task1 = _peerClient!.Unregister(new RegisterationRequest() { Name = "Peer1", Type = "Grpc" });
             var task2 = _server?.ShutdownAsync();
             Task.WaitAll([task1!, task2!]);
-        }
-
-        private SslServerCredentials GetSecureChannel()
-        {
-            List<KeyCertificatePair> certificates = new List<KeyCertificatePair>();
-            certificates.Add(new KeyCertificatePair(File.ReadAllText("C:\\certs\\CommServer.crt"), File.ReadAllText("C:\\certs\\server.key")));
-            return new SslServerCredentials(certificates);
         }
     }
 }

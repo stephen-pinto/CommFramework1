@@ -5,14 +5,14 @@ using SignalRPeerService.Types;
 
 namespace SignalRPeerService
 {
-    public class SigrPeerBridgeService
+    public class SigrPeerBridge
     {
         private readonly PeerHub? _peerHub;
         private readonly ISigrPeerClientFactory _sigrPeerClientFactory;
         private readonly IMasterClient? _masterClient;
         private readonly IPeerClient? _mainPeerClient;
 
-        public SigrPeerBridgeService(IServiceProvider serviceProvider)
+        public SigrPeerBridge(IServiceProvider serviceProvider)
         {
             _peerHub = serviceProvider.GetService<PeerHub>();
             _peerHub!.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
