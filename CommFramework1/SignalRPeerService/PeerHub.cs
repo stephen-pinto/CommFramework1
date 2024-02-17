@@ -3,12 +3,14 @@ using SignalRPeerService.Old;
 
 namespace SignalRPeerService
 {
-    public class PeerHub : Hub, IPeerClientSigr, ICommMasterClientSigr
+    public class PeerHub : Hub, ICommSignalRHub
     {
         private readonly SigrClientRegister _clientRegister;
+        private readonly ResponseAwaiter _responseAwaiter;
 
-        public PeerHub()
+        public PeerHub(ResponseAwaiter responseAwaiter)
         {
+            _responseAwaiter = responseAwaiter;
             _clientRegister = new SigrClientRegister();
         }
 
@@ -30,9 +32,10 @@ namespace SignalRPeerService
             //});
         }
 
-        public async Task SendRegisterResponse(RegisterationResponseSigr response)
+        public Task SendRegisterResponse(RegisterationResponseSigr response)
         {
-
+            //This is only supported by the server so clients may not call this method
+            throw new NotSupportedException();
         }
 
         public async Task Unregister(RegisterationRequestSigr request)
@@ -46,9 +49,10 @@ namespace SignalRPeerService
             //});
         }
 
-        public async Task SendUnregisterResponse(RegisterationResponseSigr response)
+        public Task SendUnregisterResponse(RegisterationResponseSigr response)
         {
-
+            //This is only supported by the server so clients may not call this method
+            throw new NotSupportedException();
         }
 
         public async Task MakeRequest(MessageSigr message)
@@ -59,8 +63,8 @@ namespace SignalRPeerService
 
         public async Task SendMakeRequestResponse(MessageSigr message)
         {
-            //Console.WriteLine($"Sending response {message.Id}");
-            //await Clients.Client(message.SenderId).SendAsync("ReceiveResponse", message);
+            Console.WriteLine($"Sending response {message.Id}");
+            _responseAwaiter.SaveResponse(message.Id, message);
         }
 
         public async Task Notify(MessageSigr message)

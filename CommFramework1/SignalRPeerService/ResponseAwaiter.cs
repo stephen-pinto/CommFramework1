@@ -2,10 +2,10 @@
 
 namespace SignalRPeerService
 {
-    internal class ResponseAwaiter
+    public class ResponseAwaiter
     {
-        public ConcurrentDictionary<string, MessageSigr> _reponseStore;
-        public ConcurrentDictionary<string, ManualResetEventSlim> _awaitingResponses;
+        private readonly ConcurrentDictionary<string, MessageSigr> _reponseStore;
+        private readonly ConcurrentDictionary<string, ManualResetEventSlim> _awaitingResponses;
 
         public ResponseAwaiter()
         {
@@ -19,6 +19,7 @@ namespace SignalRPeerService
             _awaitingResponses.TryAdd(id, resetEventSlim);
 
             MessageSigr? response = null;
+
             //Wait for the response
             if (resetEventSlim.Wait(timeout))
             {

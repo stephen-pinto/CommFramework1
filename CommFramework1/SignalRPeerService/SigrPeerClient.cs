@@ -6,28 +6,34 @@ namespace SignalRPeerService
 {
     public class SigrPeerClient : IPeerClient
     {
-        private readonly Hub _hubRef;
         private string _sigrConnectionId;
-        private ResponseAwaiter _responseAwaiter;
+        private string? _registrationId;
+        private readonly ICommSignalRHub _refInterface;
+        private readonly PeerHub _hubRef;        
+        private readonly ResponseAwaiter _responseAwaiter;
 
-        public SigrPeerClient(Hub hub, string sigrConnectionId, ResponseAwaiter responseAwaiter)
+        public SigrPeerClient(PeerHub hub, string sigrConnectionId, ResponseAwaiter responseAwaiter)
         {
-            _hubRef = hub;
+            _refInterface = _hubRef = hub;
             _sigrConnectionId = sigrConnectionId;
             _responseAwaiter = responseAwaiter;
         }
 
-        public Task<Message> MakeRequest(Message message)
+        public async Task<Message> MakeRequest(Message message)
         {
             MessageSigr messageSigr = message;
-            _hubRef.Clients.Client(_sigrConnectionId).SendAsync("MakeRequest", messageSigr);
-            _responseAwaiter.AwaitResponse(message.Id, new ManualResetEventSlim(false));
+            await _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(_refInterface.MakeRequest), messageSigr);
+            var response = _responseAwaiter.AwaitResponse(messageSigr.Id, new ManualResetEventSlim(false));
+            if (response == null)
+                throw new Exception("Response not received");
+            return (Message)response;
         }
 
-        public Task<Empty> Notify(Message message)
+        public async Task<Empty> Notify(Message message)
         {
             MessageSigr messageSigr = message;
-            _hubRef.Clients.Client(_sigrConnectionId).SendAsync("Notify", messageSigr);
+            await _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(_refInterface.Notify), messageSigr);
+            return new Empty();
         }
     }
 }
