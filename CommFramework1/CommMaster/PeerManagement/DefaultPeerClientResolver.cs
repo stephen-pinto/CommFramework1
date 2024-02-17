@@ -3,7 +3,10 @@ using CommServices.CommMaster;
 
 namespace CommMaster.PeerManagement
 {
-    public class PeerClientResolver : Dictionary<string, IPeerClientFactory>, IPeerClientResolver
+    /// <summary>
+    /// This resolver refers to the client's type to resolve to appropriate factory
+    /// </summary>
+    public class DefaultPeerClientResolver : Dictionary<string, IPeerClientFactory>, IPeerClientResolver
     {
         public IPeerClient GetHandle(RegisterationRequest request)
         {

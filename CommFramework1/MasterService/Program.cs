@@ -10,7 +10,7 @@ namespace MasterService
         static void Main(string[] args)
         {
             TempClient tempClient = new TempClient();
-            PeerClientResolver resolver = new PeerClientResolver();
+            DefaultPeerClientResolver resolver = new DefaultPeerClientResolver();
             resolver.Add("TempClient", new TempClientFactory(tempClient));
 
             CommService service = new CommService("localhost", 50051, resolver);
