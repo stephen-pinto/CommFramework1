@@ -1,4 +1,6 @@
-﻿namespace SignalRPeerService
+﻿using SignalRPeerService.Types;
+
+namespace SignalRPeerService.Interfaces
 {
     public interface ICommSignalRHub
     {

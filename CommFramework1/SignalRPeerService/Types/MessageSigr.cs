@@ -1,6 +1,6 @@
 ﻿using CommServices.CommShared;
 
-namespace SignalRPeerService
+namespace SignalRPeerService.Types
 {
     //public enum MessageTypeSigr
     //{

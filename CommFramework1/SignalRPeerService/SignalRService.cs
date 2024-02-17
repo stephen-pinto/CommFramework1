@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CommPeerServices.Base.Client;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SignalRPeerService
@@ -7,7 +8,7 @@ namespace SignalRPeerService
     {
         private WebApplication? _app;
 
-        public void Start()
+        public void Start(IMasterClient masterClient, IPeerClient mainPeerClient)
         {
             var builder = WebApplication.CreateBuilder();
             builder.Services.AddCors(options => options.AddPolicy("AllowAll",
@@ -16,6 +17,9 @@ namespace SignalRPeerService
                     builder.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed((_) => true).AllowCredentials();
                 }));
             builder.Services.AddSignalR();
+            builder.Services.AddSingleton<ResponseAwaiter>();
+            builder.Services.AddSingleton(masterClient);
+            builder.Services.AddSingleton(mainPeerClient);
             _app = builder.Build();
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();

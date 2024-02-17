@@ -2,8 +2,8 @@
 
 namespace CommPeerServices.Base.Server
 {
-    public interface IPeerService : IPeerClient
-    {
+    //public interface IPeerService : IPeerClient
+    //{
 
-    }
+    //}
 }

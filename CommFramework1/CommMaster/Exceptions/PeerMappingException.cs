@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace CommMaster.Exceptions
+﻿namespace CommMaster.Exceptions
 {
     [Serializable]
     internal class PeerMappingException : Exception
@@ -10,14 +8,6 @@ namespace CommMaster.Exceptions
         }
 
         public PeerMappingException(string? message) : base(message)
-        {
-        }
-
-        public PeerMappingException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
-
-        protected PeerMappingException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

@@ -1,13 +1,18 @@
 ﻿using CommServices.CommMaster;
 
-namespace SignalRPeerService
+namespace SignalRPeerService.Types
 {
     public class RegisterationRequestSigr
     {
-        public string RegistrationId { get; set; }
-        public string Type { get; set; }
-        public string Name { get; set; }
+        public string? RegistrationId { get; set; }
+        public string? Type { get; set; }
+        public string? Name { get; set; }
         public Dictionary<string, string> Properties { get; set; }
+
+        public RegisterationRequestSigr()
+        {
+            Properties = new Dictionary<string, string>();
+        }
 
         public static implicit operator RegisterationRequestSigr(RegisterationRequest registrationRequest)
         {
@@ -36,9 +41,9 @@ namespace SignalRPeerService
 
     public class RegisterationResponseSigr
     {
-        public string RegistrationId { get; set; }
-        public string Status { get; set; }
-        public string Message { get; set; }
+        public string? RegistrationId { get; set; }
+        public string? Status { get; set; }
+        public string? Message { get; set; }
 
         public static implicit operator RegisterationResponseSigr(RegisterationResponse registrationResponse)
         {

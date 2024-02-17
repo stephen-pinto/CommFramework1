@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using SignalRPeerService.Types;
 
 namespace SignalRPeerService
 {
@@ -21,13 +22,15 @@ namespace SignalRPeerService
             MessageSigr? response = null;
 
             //Wait for the response
-            if (resetEventSlim.Wait(timeout))
-            {
-                //Remove the event from the list
-                _reponseStore.TryRemove(id, out response);
-            }
+            var waitResult = resetEventSlim.Wait(timeout);
 
+            //Remove the event from the list
+            _reponseStore.TryRemove(id, out response);
             _awaitingResponses.TryRemove(new KeyValuePair<string, ManualResetEventSlim>(id, resetEventSlim));
+
+            if(!waitResult)
+                throw new TimeoutException("The request timed out");
+
             return response!;
         }
 

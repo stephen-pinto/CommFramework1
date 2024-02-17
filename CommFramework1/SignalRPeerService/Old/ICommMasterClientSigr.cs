@@ -1,4 +1,6 @@
-﻿namespace SignalRPeerService.Old
+﻿using SignalRPeerService.Types;
+
+namespace SignalRPeerService.Old
 {
     public interface ICommMasterClientSigr
     {
