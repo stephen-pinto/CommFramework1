@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace EasyRpc.Plugin.SignalR
 {
-    public class SigrPeerClient : IPeerClient
+    public class PeerSigrClient : IPeerClient
     {
         private string _sigrConnectionId;
         private readonly IEasyRpcSignalRHub _refInterface;
-        private readonly PeerHub _hubRef;
+        private readonly SignalRPeerHub _hubRef;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly RegistrationRequestSigr _registration;
 
@@ -18,8 +18,8 @@ namespace EasyRpc.Plugin.SignalR
 
         public string ConnectionId => _sigrConnectionId;
 
-        public SigrPeerClient(
-            PeerHub hub,
+        public PeerSigrClient(
+            SignalRPeerHub hub,
             RegistrationRequestSigr registeration,
             string sigrConnectionId,
             ResponseAwaiter responseAwaiter)

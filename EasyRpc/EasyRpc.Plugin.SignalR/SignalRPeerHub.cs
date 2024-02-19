@@ -10,7 +10,7 @@ namespace EasyRpc.Plugin.SignalR
     public delegate Task MakeRequestHandler(string connectionId, MessageSigr message);
     public delegate Task NotifyHandler(string connectionId, MessageSigr message);
 
-    public class PeerHub : Hub, IEasyRpcSignalRHub
+    public class SignalRPeerHub : Hub, IEasyRpcSignalRHub
     {
         private ResponseAwaiter? _responseAwaiter;
         private RegisterHandler? _registerHandler;
@@ -18,7 +18,7 @@ namespace EasyRpc.Plugin.SignalR
         private UnregisterHandler? _unregisterHandler;
         private NotifyHandler? _notifyHandler;
 
-        public PeerHub(IServiceProvider serviceProvider)
+        public SignalRPeerHub(IServiceProvider serviceProvider)
         {
             _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>();
         }

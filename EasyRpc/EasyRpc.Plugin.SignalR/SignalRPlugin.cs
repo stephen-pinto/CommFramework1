@@ -29,7 +29,7 @@ namespace EasyRpc.Plugin.SignalR
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();
             _app.UseRouting();
-            _app.MapHub<PeerHub>("/peer");
+            _app.MapHub<SignalRPeerHub>("/peer");
             _app.UseCors("AllowAll");
             _app.Urls.Add("https://localhost:5001");
         }
