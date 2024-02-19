@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+
+package EasyRpcPeer;
+
+import "Protos/EasyRpcTypes.proto";
+
+option csharp_namespace = "EasyRpc.Peer";
+
+service PeerService {
+  rpc MakeRequest (EasyRpcTypes.Message) returns (EasyRpcTypes.Message);
+  rpc Notify (EasyRpcTypes.Message) returns (EasyRpcTypes.Empty);
+}
