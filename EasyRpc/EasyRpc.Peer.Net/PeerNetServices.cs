@@ -2,15 +2,10 @@
 using EasyRpc.Core.Util;
 using EasyRpc.Master;
 using Grpc.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasyRpc.Peer.Net
 {
-    internal class PeerNetServices
+    public class PeerNetServices
     {
         private Server? _server;
         private IEasyRpcServicesClient? _peerClient;

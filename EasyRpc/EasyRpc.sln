@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyRpc.Master", "EasyRpc.Master\EasyRpc.Master.csproj", "{2117EE14-0FEE-455E-935F-2F2F3FDC4FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyRpc.Master", "EasyRpc.Master\EasyRpc.Master.csproj", "{2117EE14-0FEE-455E-935F-2F2F3FDC4FCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyRpc.Core", "EasyRpc.Core\EasyRpc.Core.csproj", "{56BD3A8B-5A65-4582-B7E4-2F08FE7B78FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyRpc.Core", "EasyRpc.Core\EasyRpc.Core.csproj", "{56BD3A8B-5A65-4582-B7E4-2F08FE7B78FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyRpc.Peer.Net", "EasyRpc.Peer.Net\EasyRpc.Peer.Net.csproj", "{7662518C-0090-4180-B341-EE8192D7FA1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyRpc.Peer.Net", "EasyRpc.Peer.Net\EasyRpc.Peer.Net.csproj", "{7662518C-0090-4180-B341-EE8192D7FA1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyRpc.Plugin.SignalR", "EasyRpc.Plugin.SignalR\EasyRpc.Plugin.SignalR.csproj", "{73BC08C5-845F-48D8-A7D0-023AE709EBA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyRpc.Plugin.SignalR", "EasyRpc.Plugin.SignalR\EasyRpc.Plugin.SignalR.csproj", "{73BC08C5-845F-48D8-A7D0-023AE709EBA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{44D17A3C-F8AD-44D1-AFA3-BACBD9C23BDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTest", "ClientTest\ClientTest.csproj", "{9111A088-6C2F-450B-A658-4F7CB8A40670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyRpcMasterService", "EasyRpcMasterService\EasyRpcMasterService.csproj", "{1A6FBFA6-C85F-4542-814E-BC026977D297}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +39,21 @@ Global
 		{73BC08C5-845F-48D8-A7D0-023AE709EBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73BC08C5-845F-48D8-A7D0-023AE709EBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73BC08C5-845F-48D8-A7D0-023AE709EBA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9111A088-6C2F-450B-A658-4F7CB8A40670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9111A088-6C2F-450B-A658-4F7CB8A40670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9111A088-6C2F-450B-A658-4F7CB8A40670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9111A088-6C2F-450B-A658-4F7CB8A40670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A6FBFA6-C85F-4542-814E-BC026977D297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A6FBFA6-C85F-4542-814E-BC026977D297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A6FBFA6-C85F-4542-814E-BC026977D297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6FBFA6-C85F-4542-814E-BC026977D297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9111A088-6C2F-450B-A658-4F7CB8A40670} = {44D17A3C-F8AD-44D1-AFA3-BACBD9C23BDA}
+		{1A6FBFA6-C85F-4542-814E-BC026977D297} = {44D17A3C-F8AD-44D1-AFA3-BACBD9C23BDA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B679F4A8-A524-4816-9B5D-46D7E1DD3E19}
