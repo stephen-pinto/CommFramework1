@@ -1,4 +1,5 @@
 ﻿using EasyRpc.Core.Client;
+using EasyRpc.Core.Plugin;
 using EasyRpc.Master.Exceptions;
 using EasyRpc.Master.Extensions;
 using EasyRpc.Master.PeerManagement;
@@ -7,11 +8,12 @@ using System.Diagnostics;
 
 namespace EasyRpc.Master
 {
-    public partial class EasyRpcService : IMasterClient, IPeerClient
+    public partial class EasyRpcService : IEasyRpcServices
     {
         private readonly IPeerRegistry _registry;
         private readonly IPeerMapper _peerMapper;
         private readonly IPeerClientResolver _resolver;
+        private readonly List<IEasyRpcPlugin> _plugins;
 
         public EasyRpcService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
         {
@@ -21,6 +23,7 @@ namespace EasyRpc.Master
             _peerMapper = new PeerMapper();
             _peerMapper.AddCriteria(new DefaultPeerMappingCriteria(_registry));
             _resolver = peerClientResolver;
+            _plugins = new List<IEasyRpcPlugin>();
         }
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
@@ -94,6 +97,12 @@ namespace EasyRpc.Master
             }
 
             throw new PeerNotFoundException("Peer not found");
+        }
+
+        public void UsePlugin(IEasyRpcPlugin plugin)
+        {
+            _plugins.Add(plugin);
+            _resolver.AddFactory(plugin.TypeIdentifier, plugin.GetClientFactory());
         }
     }
 }

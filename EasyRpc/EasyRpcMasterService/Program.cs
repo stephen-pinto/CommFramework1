@@ -17,15 +17,15 @@ namespace MasterService
             sigrPlugin.Init(new SignalRPluginConfiguration());
             DefaultPeerClientResolver resolver = new DefaultPeerClientResolver
             {
-                { "BackendClient", new BackendClientFactory(tempClient) },
-                { "SignalRClient", sigrPlugin.GetClientFactory()}
+                { "BackendClient", new BackendClientFactory(tempClient) }                
             };
 
-            EasyRpcService service = new EasyRpcService("localhost", 50051, resolver);
+            IEasyRpcServices service = new EasyRpcService("localhost", 50051, resolver);
             IMasterClient masterClient = service;
             IPeerClient peerClient = service;
 
             sigrPlugin.Load();
+            service.UsePlugin(sigrPlugin);
             service.Start();
 
             var info = masterClient.Register(new RegistrationRequest

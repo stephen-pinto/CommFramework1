@@ -8,7 +8,7 @@ namespace EasyRpc.Peer.Net
     public class PeerNetServices
     {
         private Server? _server;
-        private IEasyRpcServicesClient? _peerClient;
+        private IEasyRpcClient? _peerClient;
 
         public IPeerClient PeerClient => _peerClient!;
 

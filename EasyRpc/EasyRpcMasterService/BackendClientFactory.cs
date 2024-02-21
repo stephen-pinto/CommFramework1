@@ -11,7 +11,7 @@ namespace EasyRpcMasterService
         {
             _instance = client;
         }
-
+        
         public IPeerClient GetHandle(RegistrationRequest registerationRequest)
         {
             return _instance!;

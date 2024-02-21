@@ -10,6 +10,8 @@ namespace EasyRpc.Plugin.SignalR
     {
         private WebApplication? _app;
 
+        public string TypeIdentifier => "SignalRClient";
+
         public void Init(IEasyRpcPluginConfiguration config)
         {
             var sconfig = (SignalRPluginConfiguration)config;

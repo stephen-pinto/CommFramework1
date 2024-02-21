@@ -4,6 +4,8 @@ namespace EasyRpc.Core.Plugin
 {
     public interface IEasyRpcPlugin
     {
+        public string TypeIdentifier { get; }
+
         public void Init(IEasyRpcPluginConfiguration config);
 
         public void Load();
