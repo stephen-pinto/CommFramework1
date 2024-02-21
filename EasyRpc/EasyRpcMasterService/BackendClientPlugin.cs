@@ -21,7 +21,7 @@ namespace EasyRpcMasterService
 
         public IPeerClientFactory GetClientFactory()
         {
-            if(_backendClient == null)
+            if (_backendClient == null)
                 throw new ArgumentNullException("Not initialized. Call " + nameof(Init) + " first.");
 
             return new BackendClientFactory(_backendClient);
@@ -35,7 +35,7 @@ namespace EasyRpcMasterService
 
         public void Test()
         {
-            var info = _configuration.MasterClient.Register(new RegistrationRequest
+            var info = _configuration?.MasterClient?.Register(new RegistrationRequest
             {
                 Name = "BackendClient",
                 Type = "BackendClient",
@@ -44,10 +44,10 @@ namespace EasyRpcMasterService
                 RegistrationId = string.Empty
             }).GetAwaiter().GetResult();
 
-            _configuration.MainPeerClient.MakeRequest(new Message
+            _configuration?.MainPeerClient?.MakeRequest(new Message
             {
                 From = "BackendClient",
-                To = info.RegistrationId,
+                To = info?.RegistrationId,
                 Data = "Hello from MasterService!"
             });
         }
