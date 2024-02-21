@@ -12,42 +12,26 @@ namespace MasterService
     {
         static void Main(string[] args)
         {
-            BackendClient tempClient = new BackendClient();
+            IEasyRpcServices service = new EasyRpcService("localhost", 50051, new DefaultPeerClientResolver());
+
             IEasyRpcPlugin sigrPlugin = new SignalRPlugin();
-            sigrPlugin.Init(new SignalRPluginConfiguration());
-            DefaultPeerClientResolver resolver = new DefaultPeerClientResolver
-            {
-                { "BackendClient", new BackendClientFactory(tempClient) }                
-            };
+            sigrPlugin.Init(new SignalRPluginConfiguration() { MasterClient = service, MainPeerClient = service });
 
-            IEasyRpcServices service = new EasyRpcService("localhost", 50051, resolver);
-            IMasterClient masterClient = service;
-            IPeerClient peerClient = service;
+            var backendPlugin = new BackendClientPlugin();
+            backendPlugin.Init(new BackendPluginConfiguration() { MasterClient = service, MainPeerClient = service });
 
-            sigrPlugin.Load();
+            //IMasterClient masterClient = service;
+            //IPeerClient peerClient = service;
+
             service.UsePlugin(sigrPlugin);
+            service.UsePlugin(backendPlugin);
             service.Start();
 
-            var info = masterClient.Register(new RegistrationRequest
-            {
-                Name = "BackendClient",
-                Type = "BackendClient",
-                Address = string.Empty,
-                Properties = { { "key", "value" } },
-                RegistrationId = string.Empty
-            }).GetAwaiter().GetResult();
-
-            peerClient.MakeRequest(new Message
-            {
-                From = "BackendClient",
-                To = info.RegistrationId,
-                Data = "Hello from MasterService!"
-            });
+            backendPlugin.Test();
 
             Console.WriteLine("Press any key to stop the service...");
             Console.ReadKey();
 
-            sigrPlugin.Unload();
             service.Stop();
 
             //SignalRPeerService.SignalRService service = new SignalRPeerService.SignalRService();

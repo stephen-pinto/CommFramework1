@@ -8,6 +8,6 @@ namespace EasyRpc.Core.Client
 
         void Stop();
 
-        void UsePlugin(IEasyRpcPlugin plugin);
+        IEasyRpcServices UsePlugin(IEasyRpcPlugin plugin);
     }
 }

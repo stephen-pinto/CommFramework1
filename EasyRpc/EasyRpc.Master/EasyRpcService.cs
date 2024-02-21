@@ -99,10 +99,11 @@ namespace EasyRpc.Master
             throw new PeerNotFoundException("Peer not found");
         }
 
-        public void UsePlugin(IEasyRpcPlugin plugin)
+        public IEasyRpcServices UsePlugin(IEasyRpcPlugin plugin)
         {
             _plugins.Add(plugin);
             _resolver.AddFactory(plugin.TypeIdentifier, plugin.GetClientFactory());
+            return this;
         }
     }
 }
