@@ -9,25 +9,26 @@ namespace EasyRpc.Plugin.SignalR
     public class SignalRPlugin : IEasyRpcPlugin
     {
         private WebApplication? _app;
+        private WebApplicationBuilder? _builder;
 
         public string TypeIdentifier => "SignalRClient";
 
         public void Init(IEasyRpcPluginConfiguration config)
         {
             var sconfig = (SignalRPluginConfiguration)config;
-            var builder = WebApplication.CreateBuilder();
-            builder.Services.AddCors(options => options.AddPolicy("AllowAll",
+            _builder = WebApplication.CreateBuilder();
+            _builder.Services.AddCors(options => options.AddPolicy("AllowAll",
                 builder =>
                 {
                     builder.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed((_) => true).AllowCredentials();
                 }));
-            builder.Services.AddSignalR();
-            builder.Services.AddSingleton<ResponseAwaiter>();
-            builder.Services.AddSingleton(sconfig.MasterClient!);
-            builder.Services.AddSingleton(sconfig.MainPeerClient!);
-            builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
-            builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
-            _app = builder.Build();
+            _builder.Services.AddSignalR();
+            _builder.Services.AddSingleton<ResponseAwaiter>();
+            _builder.Services.AddSingleton(sconfig.MasterClient!);
+            _builder.Services.AddSingleton(sconfig.MainPeerClient!);
+            _builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
+            _builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
+            _app = _builder.Build();
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();
             _app.UseRouting();
