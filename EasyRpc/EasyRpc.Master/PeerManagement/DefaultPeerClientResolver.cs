@@ -7,6 +7,11 @@ namespace EasyRpc.Master.PeerManagement
     /// </summary>
     public class DefaultPeerClientResolver : Dictionary<string, IPeerClientFactory>, IPeerClientResolver
     {
+        public void AddFactory(string identifier, IPeerClientFactory peerClient)
+        {
+            Add(identifier, peerClient);
+        }
+
         public IPeerClient GetHandle(RegistrationRequest request)
         {
             if (ContainsKey(request.Type))

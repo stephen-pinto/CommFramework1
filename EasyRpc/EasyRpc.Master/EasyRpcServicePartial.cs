@@ -16,11 +16,15 @@ namespace EasyRpc.Master
         {
             SetupMasterServer();
             SetupPeerServer();
+            foreach (var plugin in _plugins)
+                plugin.Load();
         }
 
         public void Stop()
         {
             Task.WaitAll(_masterServer!.ShutdownAsync(), _peerServer!.ShutdownAsync());
+            foreach (var plugin in _plugins)
+                plugin.Unload();
         }
 
         private void SetupMasterServer()

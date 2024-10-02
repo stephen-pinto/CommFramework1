@@ -9,13 +9,13 @@ namespace EasyRpc.Plugin.SignalR
     public class DefaultSigrPeerClientStore : ISigrPeerClientStore
     {
         private readonly IMasterClient _masterClient;
-        private readonly PeerHub _hub;
+        private readonly SignalRPeerHub _hub;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly Dictionary<string, IPeerClient> _clients;
 
         public DefaultSigrPeerClientStore(IServiceProvider serviceProvider)
         {
-            _hub = serviceProvider.GetService<PeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
+            _hub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
             _masterClient = serviceProvider.GetService<IMasterClient>() ?? throw new TypeInitializationException("IMasterClient not initialized", null);
             _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>() ?? throw new TypeInitializationException("ResponseAwaiter not initialized", null);
             _clients = new Dictionary<string, IPeerClient>();
@@ -28,7 +28,7 @@ namespace EasyRpc.Plugin.SignalR
 
         public IPeerClient AddNewRegisteredClient(string connectionId, RegistrationRequestSigr registration)
         {
-            var client = new SigrPeerClient(_hub, registration, connectionId, _responseAwaiter);
+            var client = new PeerSigrClient(_hub, registration, connectionId, _responseAwaiter);
             RegistrationRequest registerationRequest = registration;
             //TODO: Change this to something unique and different then connection id
             registerationRequest.Properties.Add(CommonConstants.SigrReferenceTag, connectionId);
@@ -42,7 +42,7 @@ namespace EasyRpc.Plugin.SignalR
 
         public void RemoveClient(string connectionId)
         {
-            SigrPeerClient sigrPeerClient = (SigrPeerClient)_clients[connectionId];
+            PeerSigrClient sigrPeerClient = (PeerSigrClient)_clients[connectionId];
             _clients.Remove(connectionId);
             RegistrationRequest registerationRequest = sigrPeerClient.Registration;
             var result = _masterClient.Unregister(registerationRequest).GetAwaiter().GetResult();

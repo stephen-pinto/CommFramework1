@@ -1,27 +1,27 @@
-﻿using CommPeerServices.Base.Client;
-using CommServices.CommShared;
+﻿using EasyRpc.Core.Client;
+using EasyRpc.Plugin.SignalR.Interfaces;
+using EasyRpc.Plugin.SignalR.Types;
+using EasyRpc.Types;
 using Microsoft.AspNetCore.SignalR;
-using SignalRPeerService.Interfaces;
-using SignalRPeerService.Types;
 
-namespace SignalRPeerService
+namespace EasyRpc.Plugin.SignalR
 {
-    public class SigrPeerClient : IPeerClient
+    public class PeerSigrClient : IPeerClient
     {
         private string _sigrConnectionId;
-        private readonly ICommSignalRHub _refInterface;
-        private readonly PeerHub _hubRef;        
+        private readonly IEasyRpcSignalRHub _refInterface;
+        private readonly SignalRPeerHub _hubRef;
         private readonly ResponseAwaiter _responseAwaiter;
-        private readonly RegisterationRequestSigr _registration;
+        private readonly RegistrationRequestSigr _registration;
 
-        public RegisterationRequestSigr Registration => _registration;
+        public RegistrationRequestSigr Registration => _registration;
 
         public string ConnectionId => _sigrConnectionId;
 
-        public SigrPeerClient(
-            PeerHub hub, 
-            RegisterationRequestSigr registeration, 
-            string sigrConnectionId, 
+        public PeerSigrClient(
+            SignalRPeerHub hub,
+            RegistrationRequestSigr registeration,
+            string sigrConnectionId,
             ResponseAwaiter responseAwaiter)
         {
             _registration = registeration;

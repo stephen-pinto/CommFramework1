@@ -1,4 +1,5 @@
 ﻿using EasyRpc.Core.Client;
+using EasyRpc.Core.Plugin;
 using EasyRpc.Core.Util;
 using EasyRpc.Master;
 using EasyRpc.Types;
@@ -6,7 +7,7 @@ using Grpc.Net.Client;
 
 namespace EasyRpc.Peer.Net
 {
-    internal class PeerNetClient : IEasyRpcServicesClient
+    internal class PeerNetClient : IEasyRpcClient
     {
         private readonly PeerService.PeerServiceClient _client;
         private readonly MasterService.MasterServiceClient _master;
@@ -59,6 +60,11 @@ namespace EasyRpc.Peer.Net
             _id = null;
             request.RegistrationId = _id;
             return await _master.UnregisterAsync(request);
+        }
+
+        public void UsePlugin(IEasyRpcPlugin plugin)
+        {
+            throw new NotImplementedException();
         }
     }
 }

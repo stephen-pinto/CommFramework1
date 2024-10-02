@@ -5,15 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyRpc.Plugin.SignalR
 {
-    public class SigrPeerBridge
+    public class PeerSigrBridge
     {
-        private readonly PeerHub _peerHub;
+        private readonly SignalRPeerHub _peerHub;
         private readonly ISigrPeerClientStore _sigrPeerClientFactory;
         private readonly IPeerClient _mainPeerClient;
 
-        public SigrPeerBridge(IServiceProvider serviceProvider)
+        public PeerSigrBridge(IServiceProvider serviceProvider)
         {
-            _peerHub = serviceProvider.GetService<PeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
+            _peerHub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
             _peerHub!.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
 
             _mainPeerClient = serviceProvider.GetService<IPeerClient>() ?? throw new TypeInitializationException("IPeerClient not initialized", null);
