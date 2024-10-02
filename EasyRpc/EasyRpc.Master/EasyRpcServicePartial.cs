@@ -32,7 +32,11 @@ namespace EasyRpc.Master
             _masterServer = new Server
             {
                 Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister)) },
-                Ports = { new ServerPort(_serviceHost, _port, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
+                Ports = {
+                    new ServerPort(_serviceHost,
+                        _port,
+                        GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
+                    }
             };
 
             _masterServer.Start();
@@ -44,7 +48,10 @@ namespace EasyRpc.Master
             _peerServer = new Server
             {
                 Services = { PeerService.BindService(new EasyRpcPeerService(MakeRequest, Notify)) },
-                Ports = { new ServerPort(_serviceHost, _port + 1, GrpcChannelSecurityHelper.GetSecureServerCredentials(CommonConstants.ServerCertificatePath, CommonConstants.ServerKeyPath)) }
+                Ports = { new ServerPort(_serviceHost,
+                    _port + 1,
+                    GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
+                }
             };
 
             _peerServer.Start();

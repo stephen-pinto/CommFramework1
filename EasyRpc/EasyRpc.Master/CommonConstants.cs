@@ -2,9 +2,9 @@
 {
     internal class CommonConstants
     {
-        public const string ServerCertificatePath = "C:\\certs\\CommServer.crt";
-        public const string ServerKeyPath = "C:\\certs\\server.key";
-        public const string ClientCertificatePath = "C:\\certs\\CommClient.crt";
-        public const string ClientKeyPath = "C:\\certs\\client.key";
+        public const string ServerCertificateFile = "Server.crt";
+        public const string ServerKeyFile = "Server.key";
+        public const string ClientCertificateFile = "Client.crt";
+        public const string ClientKeyFile = "Client.key";
     }
 }

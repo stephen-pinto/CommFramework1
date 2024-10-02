@@ -11,7 +11,7 @@ namespace EasyRpc.Plugin.SignalR
 
         public SigrPeerClientFactory(IServiceProvider serviceProvider)
         {
-            _sigrPeerClientStore = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
+            _sigrPeerClientStore = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException($"{nameof(ISigrPeerClientStore)} not initialized", null);
         }
 
         public IPeerClient GetHandle(RegistrationRequest registerationRequest)
