@@ -1,4 +1,5 @@
 ﻿using EasyRpc.Core.Client;
+using EasyRpc.Core.Util;
 using EasyRpc.Master.Exceptions;
 using EasyRpc.Master.Extensions;
 using EasyRpc.Master.PeerManagement;
@@ -12,6 +13,7 @@ namespace EasyRpc.Master
         private readonly IPeerRegistry _registry;
         private readonly IPeerMapper _peerMapper;
         private readonly IPeerClientResolver _resolver;
+        private readonly ICertificateProvider _serverCertificateProvider;
 
         public EasyRpcService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
         {
@@ -21,6 +23,7 @@ namespace EasyRpc.Master
             _peerMapper = new PeerMapper();
             _peerMapper.AddCriteria(new DefaultPeerMappingCriteria(_registry));
             _resolver = peerClientResolver;
+            _serverCertificateProvider = new DefaultServerCertificateProvider();
         }
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)

@@ -25,14 +25,13 @@ namespace EasyRpc.Master
 
         private void SetupMasterServer()
         {
-            var certDir = Environment.GetEnvironmentVariable("EASYRPC_TEST_CERT");
             _masterServer = new Server
             {
                 Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister)) },
                 Ports = {
-                    new ServerPort(_serviceHost, _port, GrpcChannelSecurityHelper.GetSecureServerCredentials(
-                        Path.Combine(certDir!, CommonConstants.ServerCertificateFile),
-                        Path.Combine(certDir!, CommonConstants.ServerKeyFile)))
+                    new ServerPort(_serviceHost,
+                        _port,
+                        GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
                     }
             };
 
@@ -42,14 +41,12 @@ namespace EasyRpc.Master
 
         private void SetupPeerServer()
         {
-            var certDir = Environment.GetEnvironmentVariable("EASYRPC_TEST_CERT");
             _peerServer = new Server
             {
                 Services = { PeerService.BindService(new EasyRpcPeerService(MakeRequest, Notify)) },
-                Ports = { new ServerPort(_serviceHost, _port + 1,
-                    GrpcChannelSecurityHelper.GetSecureServerCredentials(
-                        Path.Combine(certDir!, CommonConstants.ServerCertificateFile),
-                        Path.Combine(certDir!, CommonConstants.ServerKeyFile)))
+                Ports = { new ServerPort(_serviceHost,
+                    _port + 1,
+                    GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
                 }
             };
 
