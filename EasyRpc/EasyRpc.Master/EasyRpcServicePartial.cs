@@ -46,10 +46,10 @@ namespace EasyRpc.Master
             _peerServer = new Server
             {
                 Services = { PeerService.BindService(new EasyRpcPeerService(MakeRequest, Notify)) },
-                Ports = { new ServerPort(_serviceHost, _port + 1, 
+                Ports = { new ServerPort(_serviceHost, _port + 1,
                     GrpcChannelSecurityHelper.GetSecureServerCredentials(
                         Path.Combine(certDir!, CommonConstants.ServerCertificateFile),
-                        Path.Combine(certDir!, CommonConstants.ServerKeyFile))) 
+                        Path.Combine(certDir!, CommonConstants.ServerKeyFile)))
                 }
             };
 
