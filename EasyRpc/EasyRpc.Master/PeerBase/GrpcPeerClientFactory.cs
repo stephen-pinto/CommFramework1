@@ -7,9 +7,12 @@ namespace EasyRpc.Master.PeerBase
     {
         public IPeerClient GetHandle(RegistrationRequest registerationRequest)
         {
+            var certDir = Environment.GetEnvironmentVariable("EASYRPC_TEST_CERT");
             HttpClientHandler handler = new HttpClientHandler();
-            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, CommonConstants.ServerCertificatePath);
-            GrpcChannelSecurityHelper.SetClientCertificates(handler, CommonConstants.ClientCertificatePath, CommonConstants.ClientKeyPath);
+            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, Path.Combine(certDir!, CommonConstants.ServerCertificateFile));
+            GrpcChannelSecurityHelper.SetClientCertificates(handler,
+                Path.Combine(certDir!, CommonConstants.ClientCertificateFile),
+                Path.Combine(certDir!, CommonConstants.ClientKeyFile));
             return new GrpcPeerClient(registerationRequest.Address, handler);
         }
     }

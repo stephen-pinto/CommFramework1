@@ -16,14 +16,15 @@ namespace EasyRpc.Peer.Net
             string masterAddress,
             string masterClient)
         {
+            var certDir = Environment.GetEnvironmentVariable("EASYRPC_TEST_CERT");
             HttpClientHandler handler = new HttpClientHandler();
             GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(
                 handler,
-                "C:\\certs\\CommServer.crt");
+                Path.Combine(certDir!, "Server.crt"));
             GrpcChannelSecurityHelper.SetClientCertificates(
                 handler,
-                "C:\\certs\\CommClient.crt",
-                "C:\\certs\\client.key");
+                Path.Combine(certDir!, "Client.crt"),
+                Path.Combine(certDir!, "Client.key"));
 
             var pchannel = GrpcChannel.ForAddress(masterClient, new GrpcChannelOptions
             {
