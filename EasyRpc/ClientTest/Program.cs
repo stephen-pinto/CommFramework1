@@ -6,6 +6,7 @@ internal class Program
     private static void Main(string[] args)
     {
         Program pg = new Program();
+        var curPath = Directory.GetCurrentDirectory();
 
         Console.WriteLine("Welcome to Peer1 service!");
         PeerNetServices services = new PeerNetServices();

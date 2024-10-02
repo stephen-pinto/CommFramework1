@@ -5,27 +5,32 @@ namespace EasyRpc.Core.Util
 {
     public static class GrpcChannelSecurityHelper
     {
-        public static void SetAutoTrustedServerCertificates(HttpClientHandler handler, string certificateFilePath)
+        public static void SetAutoTrustedServerCertificates(HttpClientHandler handler, ICertificateProvider certificateProvider)
         {
             // Validate the server certificate with the root CA
             handler.ServerCertificateCustomValidationCallback = (message, cert, chain, _) =>
             {
-                chain!.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                chain.ChainPolicy.CustomTrustStore.Add(new X509Certificate2(certificateFilePath));
+                ArgumentNullException.ThrowIfNull(chain, nameof(chain));
+
+                chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+                chain.ChainPolicy.CustomTrustStore.Add(new X509Certificate2(certificateProvider.GetCertificatePath()));
                 return chain.Build(cert!);
             };
         }
 
-        public static void SetClientCertificates(HttpClientHandler handler, string pemCertFilePath, string keyFilePath)
+        public static void SetClientCertificates(HttpClientHandler handler, ICertificateProvider certificateProvider)
         {
-            var clientCert = X509Certificate2.CreateFromPemFile(pemCertFilePath, keyFilePath);
+            var clientCert = X509Certificate2.CreateFromPemFile(
+                certificateProvider.GetCertificatePath(),
+                certificateProvider.GetKeyPath());
+
             handler.ClientCertificates.Add(clientCert);
         }
 
-        public static SslServerCredentials GetSecureServerCredentials(string certificateFilePath, string keyFilePath)
+        public static SslServerCredentials GetSecureServerCredentials(ICertificateProvider certificateProvider)
         {
             List<KeyCertificatePair> certificates = [
-                new KeyCertificatePair(File.ReadAllText(certificateFilePath), File.ReadAllText(keyFilePath))
+                new KeyCertificatePair(certificateProvider.GetCertificateContent(), certificateProvider.GetKeyContent())
             ];
             return new SslServerCredentials(certificates);
         }

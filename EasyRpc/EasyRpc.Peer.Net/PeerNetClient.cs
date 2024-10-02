@@ -13,29 +13,26 @@ namespace EasyRpc.Peer.Net
         private readonly MasterService.MasterServiceClient _master;
         private string? _id;
 
-        public PeerNetClient(
-            string masterAddress,
-            string masterClient)
+        public PeerNetClient(string masterAddress, string masterClient)
         {
+            var serverCertProvider = new DefaultServerCertificateProvider();
+            var clientCertProvider = new DefaultClientCertificateProvider();
             HttpClientHandler handler = new HttpClientHandler();
-            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(
-                handler,
-                "C:\\certs\\CommServer.crt");
-            GrpcChannelSecurityHelper.SetClientCertificates(
-                handler,
-                "C:\\certs\\CommClient.crt",
-                "C:\\certs\\client.key");
+            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, serverCertProvider);
+            GrpcChannelSecurityHelper.SetClientCertificates(handler, clientCertProvider);
 
             var pchannel = GrpcChannel.ForAddress(masterClient, new GrpcChannelOptions
             {
                 HttpClient = new HttpClient(handler)
             });
+
             _client = new PeerService.PeerServiceClient(pchannel);
 
             var mchannel = GrpcChannel.ForAddress(masterAddress, new GrpcChannelOptions
             {
                 HttpClient = new HttpClient(handler)
             });
+
             _master = new MasterService.MasterServiceClient(mchannel);
         }
 

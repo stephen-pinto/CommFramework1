@@ -19,6 +19,8 @@ namespace EasyRpc.Peer.Net
             MakeRequestDelegate makeRequestHandler,
             NotifyDelegate notifyHandler)
         {
+            ICertificateProvider certificateProvider = new DefaultClientCertificateProvider();
+
             //TODO: Move the masterPeerAddress to fetch from registration response
             _peerClient = new PeerNetClient(masterAddress, masterPeerAddress);
             var response = await _peerClient.Register(new RegistrationRequest
@@ -29,18 +31,18 @@ namespace EasyRpc.Peer.Net
                 Properties = { { "OS", "Windows" }, { "Version", "10" } },
             }).ConfigureAwait(false);
 
-            _server = new Server
+            _listener = new Server
             {
                 Services = { PeerService.BindService(new PeerNetService(makeRequestHandler, notifyHandler)) },
-                Ports = { new ServerPort("localhost", 50055, GrpcChannelSecurityHelper.GetSecureServerCredentials("C:\\certs\\CommServer.crt", "C:\\certs\\server.key")) }
+                Ports = { new ServerPort("localhost", 50055, GrpcChannelSecurityHelper.GetSecureServerCredentials(certificateProvider)) }
             };
-            _server.Start();
+            _listener.Start();
         }
 
         public void Stop()
         {
             var task1 = _peerClient!.Unregister(new RegistrationRequest() { Name = "Peer1", Type = "Grpc" });
-            var task2 = _server?.ShutdownAsync();
+            var task2 = _listener?.ShutdownAsync();
             Task.WaitAll([task1!, task2!]);
         }
     }
