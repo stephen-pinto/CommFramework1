@@ -2,12 +2,9 @@
 {
     public class PeerMappingException : Exception
     {
-        public PeerMappingException()
+        public PeerMappingException(string? message = null) : base(message)
         {
-        }
 
-        public PeerMappingException(string? message) : base(message)
-        {
         }
     }
 }
