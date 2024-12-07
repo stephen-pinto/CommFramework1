@@ -4,14 +4,16 @@ namespace EasyRpc.Core.Plugin
 {
     public interface IEasyRpcPlugin
     {
-        public string TypeIdentifier { get; }
+        string TypeIdentifier { get; }
 
-        public void Init(IEasyRpcPluginConfiguration config);
+        void Init(IEasyRpcPluginConfiguration config);
 
-        public void Load();
+        void Load();
 
-        public void Unload();
+        void Unload();
 
-        public IPeerClientFactory GetClientFactory();
+        IPeerClientFactory GetClientFactory();
+
+        void SetupServiceProvider(IEasyRpcService serviceProvider);
     }
 }

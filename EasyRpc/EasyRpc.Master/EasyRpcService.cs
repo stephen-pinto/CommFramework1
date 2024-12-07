@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace EasyRpc.Master
 {
-    public partial class EasyRpcService : IEasyRpcServices
+    public partial class EasyRpcService : IEasyRpcService
     {
         private readonly IPeerRegistry _registry;
         private readonly IPeerMapper _peerMapper;
@@ -102,9 +102,10 @@ namespace EasyRpc.Master
             throw new PeerNotFoundException("Peer not found");
         }
 
-        public IEasyRpcServices UsePlugin(IEasyRpcPlugin plugin)
+        public IEasyRpcService UsePlugin(IEasyRpcPlugin plugin)
         {
             _plugins.Add(plugin);
+            plugin.SetupServiceProvider(this);
             _resolver.AddFactory(plugin.TypeIdentifier, plugin.GetClientFactory());
             return this;
         }

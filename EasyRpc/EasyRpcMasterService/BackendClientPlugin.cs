@@ -7,15 +7,15 @@ namespace EasyRpcMasterService
 {
     internal class BackendPluginConfiguration : IEasyRpcPluginConfiguration
     {
-        public IMasterClient? MasterClient { get; set; }
-
-        public IPeerClient? MainPeerClient { get; set; }
+       
     }
 
     internal class BackendClientPlugin : IEasyRpcPlugin
     {
         private BackendClient? _backendClient;
         private BackendPluginConfiguration? _configuration;
+
+        public IEasyRpcService? Service { get; private set; }
 
         public string TypeIdentifier => "BackendClient";
 
@@ -35,7 +35,7 @@ namespace EasyRpcMasterService
 
         public void Test()
         {
-            var info = _configuration?.MasterClient?.Register(new RegistrationRequest
+            var info = Service!.Register(new RegistrationRequest
             {
                 Name = "BackendClient",
                 Type = "BackendClient",
@@ -44,7 +44,7 @@ namespace EasyRpcMasterService
                 RegistrationId = string.Empty
             }).GetAwaiter().GetResult();
 
-            _configuration?.MainPeerClient?.MakeRequest(new Message
+            Service.MakeRequest(new Message
             {
                 From = "BackendClient",
                 To = info?.RegistrationId,
@@ -55,5 +55,10 @@ namespace EasyRpcMasterService
         public void Load() { }
 
         public void Unload() { }
+
+        public void SetupServiceProvider(IEasyRpcService service)
+        {
+            this.Service = service;
+        }
     }
 }

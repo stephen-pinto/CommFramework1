@@ -13,6 +13,8 @@ namespace EasyRpc.Plugin.SignalR
 
         public string TypeIdentifier => "SignalRClient";
 
+        public IEasyRpcService? Service { get; private set; }
+
         public void Init(IEasyRpcPluginConfiguration config)
         {
             var sconfig = (SignalRPluginConfiguration)config;
@@ -24,8 +26,8 @@ namespace EasyRpc.Plugin.SignalR
                 }));
             _builder.Services.AddSignalR();
             _builder.Services.AddSingleton<ResponseAwaiter>();
-            _builder.Services.AddSingleton(sconfig.MasterClient!);
-            _builder.Services.AddSingleton(sconfig.MainPeerClient!);
+            _builder.Services.AddSingleton<IMasterClient>(GetServiceProvider());
+            _builder.Services.AddSingleton<IPeerClient>(GetServiceProvider());
             _builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
             _builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
             _app = _builder.Build();
@@ -50,6 +52,16 @@ namespace EasyRpc.Plugin.SignalR
         public IPeerClientFactory GetClientFactory()
         {
             return _app!.Services.GetService<IPeerClientFactory>()!;
+        }
+
+        public void SetupServiceProvider(IEasyRpcService service)
+        {
+            this.Service = service;
+        }
+
+        private IEasyRpcService GetServiceProvider()
+        {
+            return Service!;
         }
     }
 }

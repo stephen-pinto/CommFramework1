@@ -12,9 +12,5 @@ namespace EasyRpc.Plugin.SignalR
         public string EndpointPath { get; set; } = "/peer";
 
         public MasterServiceProviderFactoryFunc? MasterServiceProvider { get; set; }
-
-        public IMasterClient? MasterClient { get; set; }
-
-        public IPeerClient? MainPeerClient { get; set; }
     }
 }
