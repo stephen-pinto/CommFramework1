@@ -12,7 +12,7 @@ namespace EasyRpc.Master.PeerBase
             HttpClientHandler handler = new HttpClientHandler();
             //TODO: Move this
             GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, serverCertificateProvider);
-            GrpcChannelSecurityHelper.SetClientCertificates(handler, serverCertificateProvider);
+            GrpcChannelSecurityHelper.SetClientCertificates(handler, clientCertificateProvider);
             return new GrpcPeerClient(registerationRequest.Address, handler);
         }
     }
