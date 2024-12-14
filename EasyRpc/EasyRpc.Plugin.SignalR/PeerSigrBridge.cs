@@ -9,14 +9,14 @@ namespace EasyRpc.Plugin.SignalR
     {
         private readonly SignalRPeerHub _peerHub;
         private readonly ISigrPeerClientStore _sigrPeerClientFactory;
-        private readonly IPeerClient _mainPeerClient;
+        private readonly IPeerService _mainPeerClient;
 
         public PeerSigrBridge(IServiceProvider serviceProvider)
         {
             _peerHub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
             _peerHub!.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
 
-            _mainPeerClient = serviceProvider.GetService<IPeerClient>() ?? throw new TypeInitializationException("IPeerClient not initialized", null);
+            _mainPeerClient = serviceProvider.GetService<IPeerService>() ?? throw new TypeInitializationException("IPeerClient not initialized", null);
             _sigrPeerClientFactory = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
         }
 

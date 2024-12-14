@@ -1,6 +1,6 @@
 ﻿namespace EasyRpc.Core.Client
 {
-    public interface IEasyRpcClient : IMasterClient, IPeerClient
+    public interface IEasyRpcClient : IMasterService, IPeerService
     {
     }
 }

@@ -9,21 +9,20 @@ using System.Diagnostics;
 
 namespace EasyRpc.Master
 {
-    public partial class EasyRpcService : IEasyRpcServices
+    public partial class EasyRpcService : IEasyRpcServicesPluginAbstraction
     {
         private readonly IPeerRegistry _registry;
         private readonly IPeerMapper _peerMapper;
         private readonly IPeerClientResolver _resolver;
         private readonly ICertificateProvider _serverCertificateProvider;
         private readonly List<IEasyRpcPlugin> _plugins;
+        public event EventHandler<Message>? Notification;
 
         public EasyRpcService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
         {
             _serviceHost = serviceHost;
             _port = port;
             _registry = new PeerRegistry();
-            _peerMapper = new PeerMapper();
-            _peerMapper.AddCriteria(new DefaultPeerMappingCriteria(_registry));
             _resolver = peerClientResolver;
             _serverCertificateProvider = new DefaultServerCertificateProvider();
             _plugins = new List<IEasyRpcPlugin>();
@@ -61,16 +60,22 @@ namespace EasyRpc.Master
             });
         }
 
+        public Task<Empty> Notify(Message message)
+        {
+            if (_registry.ContainsKey(message.From))
+            {
+                Notification?.Invoke(this, message);
+            }
+
+            return Task.FromResult(new Empty());
+        }
+
         public async Task<Message> MakeRequest(Message message)
         {
             if (string.IsNullOrWhiteSpace(message.To))
             {
                 if (!_peerMapper.HasAnyCriteria)
                     throw new PeerNotFoundException("Could not find peer");
-
-                //If we have a mapping criteria defined then map accordingly
-                var peer = _peerMapper.MapPeer(_registry[message.From].Peer);
-                message.To = peer.Id;
             }
 
             //TODO: Should context be passed to the peer handle?
@@ -80,26 +85,6 @@ namespace EasyRpc.Master
             }
 
             throw new PeerNotFoundException("Client not found");
-        }
-
-        public async Task<Empty> Notify(Message message)
-        {
-            if (string.IsNullOrWhiteSpace(message.To))
-            {
-                if (!_peerMapper.HasAnyCriteria)
-                    throw new PeerNotFoundException("Could not find peer");
-
-                //If we have a mapping criteria defined then map accordingly
-                var peer = _peerMapper.MapPeer(_registry[message.From].Peer);
-                message.To = peer.Id;
-            }
-
-            if (_registry.TryGetValue(message.To, out var client))
-            {
-                return await client.Handle.Notify(message).ConfigureAwait(false);
-            }
-
-            throw new PeerNotFoundException("Peer not found");
         }
 
         public IEasyRpcServices UsePlugin(IEasyRpcPlugin plugin)

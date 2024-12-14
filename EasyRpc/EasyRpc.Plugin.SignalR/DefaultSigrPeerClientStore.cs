@@ -8,25 +8,25 @@ namespace EasyRpc.Plugin.SignalR
 {
     public class DefaultSigrPeerClientStore : ISigrPeerClientStore
     {
-        private readonly IMasterClient _masterClient;
+        private readonly IMasterService _masterClient;
         private readonly SignalRPeerHub _hub;
         private readonly ResponseAwaiter _responseAwaiter;
-        private readonly Dictionary<string, IPeerClient> _clients;
+        private readonly Dictionary<string, IPeerService> _clients;
 
         public DefaultSigrPeerClientStore(IServiceProvider serviceProvider)
         {
             _hub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
-            _masterClient = serviceProvider.GetService<IMasterClient>() ?? throw new TypeInitializationException("IMasterClient not initialized", null);
+            _masterClient = serviceProvider.GetService<IMasterService>() ?? throw new TypeInitializationException("IMasterClient not initialized", null);
             _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>() ?? throw new TypeInitializationException("ResponseAwaiter not initialized", null);
-            _clients = new Dictionary<string, IPeerClient>();
+            _clients = new Dictionary<string, IPeerService>();
         }
 
-        public IPeerClient GetClient(string connectionId)
+        public IPeerService GetClient(string connectionId)
         {
             return _clients[connectionId];
         }
 
-        public IPeerClient AddNewRegisteredClient(string connectionId, RegistrationRequestSigr registration)
+        public IPeerService AddNewRegisteredClient(string connectionId, RegistrationRequestSigr registration)
         {
             var client = new PeerSigrClient(_hub, registration, connectionId, _responseAwaiter);
             RegistrationRequest registerationRequest = registration;

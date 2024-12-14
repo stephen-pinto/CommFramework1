@@ -3,7 +3,7 @@ using EasyRpc.Types;
 
 namespace EasyRpcMasterService
 {
-    public class BackendClient : IPeerClient
+    public class BackendClient : IPeerService
     {
         public Task<Message> MakeRequest(Message message)
         {

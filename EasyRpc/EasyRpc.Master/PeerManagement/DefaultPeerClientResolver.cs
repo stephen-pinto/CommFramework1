@@ -12,7 +12,7 @@ namespace EasyRpc.Master.PeerManagement
             Add(identifier, peerClient);
         }
 
-        public IPeerClient GetHandle(RegistrationRequest request)
+        public IPeerService GetHandle(RegistrationRequest request)
         {
             if (ContainsKey(request.Type))
                 return this[request.Type].GetHandle(request);

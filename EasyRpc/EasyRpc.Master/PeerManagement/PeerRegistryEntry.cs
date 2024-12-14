@@ -3,5 +3,5 @@ using EasyRpc.Master.PeerBase;
 
 namespace EasyRpc.Master.PeerManagement
 {
-    public record PeerRegistryEntry(PeerInfo Peer, IPeerClient Handle);
+    public record PeerRegistryEntry(PeerInfo Peer, IPeerService Handle);
 }

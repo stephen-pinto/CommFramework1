@@ -24,4 +24,5 @@ enum MessageType
   RESPONSE = 2;
   NOTIFICATION = 3;
   ERROR = 4;
+  TELEMETRY = 5;
 }

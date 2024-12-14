@@ -3,7 +3,7 @@ using EasyRpc.Core.Plugin;
 
 namespace EasyRpc.Plugin.SignalR
 {
-    public delegate Tuple<IMasterClient, IPeerClient> MasterServiceProviderFactoryFunc();
+    public delegate Tuple<IMasterService, IPeerService> MasterServiceProviderFactoryFunc();
 
     public record SignalRPluginConfiguration : IEasyRpcPluginConfiguration
     {
@@ -13,8 +13,8 @@ namespace EasyRpc.Plugin.SignalR
 
         public MasterServiceProviderFactoryFunc? MasterServiceProvider { get; set; }
 
-        public IMasterClient? MasterClient { get; set; }
+        public IMasterService? MasterClient { get; set; }
 
-        public IPeerClient? MainPeerClient { get; set; }
+        public IPeerService? MainPeerClient { get; set; }
     }
 }

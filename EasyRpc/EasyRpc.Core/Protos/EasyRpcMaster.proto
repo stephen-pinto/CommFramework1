@@ -4,9 +4,12 @@ package EasyRpcMaster;
 
 option csharp_namespace = "EasyRpc.Master";
 
+import "Protos/EasyRpcTypes.proto";
+
 service MasterService {
   rpc Register (RegistrationRequest) returns (RegistrationResponse);
   rpc Unregister (RegistrationRequest) returns (RegistrationResponse);  
+  rpc Notify (EasyRpcTypes.Message) returns (EasyRpcTypes.Empty);
 }
 
 message RegistrationRequest {

@@ -6,6 +6,6 @@ namespace EasyRpc.Master.PeerManagement
     {
         void AddFactory(string identifier, IPeerClientFactory peerClientFactory);
 
-        IPeerClient GetHandle(RegistrationRequest request);
+        IPeerService GetHandle(RegistrationRequest request);
     }
 }

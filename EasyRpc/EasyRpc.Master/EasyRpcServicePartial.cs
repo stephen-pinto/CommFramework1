@@ -9,20 +9,17 @@ namespace EasyRpc.Master
         private readonly string _serviceHost;
         private readonly int _port;
         private Server? _masterServer;
-        private Server? _peerServer;
-        private string Address => $"https://{_serviceHost}:{_port}";
-
+        
         public void Start()
         {
             SetupMasterServer();
-            SetupPeerServer();
             foreach (var plugin in _plugins)
                 plugin.Load();
         }
 
         public void Stop()
         {
-            Task.WaitAll(_masterServer!.ShutdownAsync(), _peerServer!.ShutdownAsync());
+            Task.WaitAll(_masterServer!.ShutdownAsync());
             foreach (var plugin in _plugins)
                 plugin.Unload();
         }
@@ -31,9 +28,10 @@ namespace EasyRpc.Master
         {
             _masterServer = new Server
             {
-                Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister)) },
+                Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister, RaiseNotification)) },
                 Ports = {
-                    new ServerPort(_serviceHost,
+                    new ServerPort(
+                        _serviceHost,
                         _port,
                         GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
                     }
@@ -43,19 +41,9 @@ namespace EasyRpc.Master
             System.Diagnostics.Debug.WriteLine($"Master server listening on port {_port}");
         }
 
-        private void SetupPeerServer()
+        public void Dispose()
         {
-            _peerServer = new Server
-            {
-                Services = { PeerService.BindService(new EasyRpcPeerService(MakeRequest, Notify)) },
-                Ports = { new ServerPort(_serviceHost,
-                    _port + 1,
-                    GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
-                }
-            };
-
-            _peerServer.Start();
-            System.Diagnostics.Debug.WriteLine($"Peer server listening on port {_port + 1}");
+            Stop();
         }
     }
 }

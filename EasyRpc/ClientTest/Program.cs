@@ -9,7 +9,7 @@ internal class Program
         var curPath = Directory.GetCurrentDirectory();
 
         Console.WriteLine("Welcome to Peer1 service!");
-        PeerNetServices services = new PeerNetServices();
+        EasyRpcNetProvider services = new EasyRpcNetProvider();
         services.Start(
             "https://localhost:50051",
             "https://localhost:50052",
@@ -19,7 +19,7 @@ internal class Program
         Console.WriteLine("Press any key to test message send");
         Console.ReadKey();
 
-        services.PeerClient.MakeRequest(new Message()
+        services.MasterClient.MakeRequest(new Message()
         {
             Data = "Hello from Peer1"
         }).GetAwaiter().GetResult();

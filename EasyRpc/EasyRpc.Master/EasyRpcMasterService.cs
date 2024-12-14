@@ -1,4 +1,5 @@
 ﻿using EasyRpc.Core.Client;
+using EasyRpc.Types;
 using Grpc.Core;
 
 namespace EasyRpc.Master
@@ -7,11 +8,13 @@ namespace EasyRpc.Master
     {
         private readonly RegisterDelegate _registerHandler;
         private readonly UnregisterDelegate _unregisterHandler;
+        private readonly NotifyDelegate _notificationHandler;
 
-        public EasyRpcMasterService(RegisterDelegate register, UnregisterDelegate unregister)
+        public EasyRpcMasterService(RegisterDelegate register, UnregisterDelegate unregister, NotifyDelegate notify)
         {
             _registerHandler = register;
             _unregisterHandler = unregister;
+            _notificationHandler = notify;
         }
 
         public override async Task<RegistrationResponse> Register(RegistrationRequest request, ServerCallContext context)
@@ -22,6 +25,12 @@ namespace EasyRpc.Master
         public override async Task<RegistrationResponse> Unregister(RegistrationRequest request, ServerCallContext context)
         {
             return await _unregisterHandler(request);
+        }
+
+        public override async Task<Empty> Notify(Message message, ServerCallContext context)
+        {
+            _notificationHandler(message);
+            return await Task.FromResult(new Empty());
         }
     }
 }

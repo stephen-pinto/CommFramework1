@@ -7,9 +7,9 @@ namespace EasyRpcMasterService
 {
     internal class BackendPluginConfiguration : IEasyRpcPluginConfiguration
     {
-        public IMasterClient? MasterClient { get; set; }
+        public IMasterService? MasterClient { get; set; }
 
-        public IPeerClient? MainPeerClient { get; set; }
+        public IPeerService? MainPeerClient { get; set; }
     }
 
     internal class BackendClientPlugin : IEasyRpcPlugin

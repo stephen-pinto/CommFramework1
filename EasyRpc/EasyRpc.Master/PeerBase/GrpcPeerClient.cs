@@ -5,7 +5,7 @@ using Grpc.Net.Client;
 
 namespace EasyRpc.Master.PeerBase
 {
-    public class GrpcPeerClient : IPeerClient
+    public class GrpcPeerClient : IPeerService
     {
         private readonly PeerService.PeerServiceClient _client;
 
@@ -28,11 +28,6 @@ namespace EasyRpc.Master.PeerBase
         public async Task<Message> MakeRequest(Message message)
         {
             return await _client.MakeRequestAsync(message);
-        }
-
-        public async Task<Empty> Notify(Message message)
-        {
-            return await _client.NotifyAsync(message);
         }
     }
 }

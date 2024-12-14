@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace EasyRpc.Plugin.SignalR
 {
-    public class PeerSigrClient : IPeerClient
+    public class PeerSigrClient : IPeerService
     {
         private string _sigrConnectionId;
         private readonly IEasyRpcSignalRHub _refInterface;
