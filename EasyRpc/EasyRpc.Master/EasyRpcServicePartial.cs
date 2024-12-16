@@ -1,5 +1,4 @@
 ﻿using EasyRpc.Core.Util;
-using EasyRpc.Peer;
 using Grpc.Core;
 
 namespace EasyRpc.Master
@@ -28,7 +27,7 @@ namespace EasyRpc.Master
         {
             _masterServer = new Server
             {
-                Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister, RaiseNotification)) },
+                Services = { MasterService.BindService(new EasyRpcMasterService(Register, Unregister, Notify)) },
                 Ports = {
                     new ServerPort(
                         _serviceHost,
