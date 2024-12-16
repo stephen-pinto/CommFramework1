@@ -16,14 +16,16 @@ namespace EasyRpc.Master
         private readonly ICertificateProvider _serverCertificateProvider;
         private readonly List<IEasyRpcPlugin> _plugins;
         public event EventHandler<Message>? Notification;
+        public event EventHandler<PeerInfo>? PeerAdded;
+        public event EventHandler? PeerRemoved;
 
         //TODO: This will be used to indetify what targets we want to communicate with and their addr.
         public IReadOnlyCollection<PeerInfo> PeerList => _registry.Values.Select(x => x.Peer).ToList();
 
-        public EasyRpcService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
+        public EasyRpcService(Uri uri, IPeerClientResolver peerClientResolver)
         {
-            _serviceHost = serviceHost;
-            _port = port;
+            _serviceHost = uri.Host;
+            _port = uri.Port;
             _registry = new PeerRegistry();
             _resolver = peerClientResolver;
             _serverCertificateProvider = new DefaultServerCertificateProvider();
@@ -35,10 +37,13 @@ namespace EasyRpc.Master
             request.RegistrationId = Guid.NewGuid().ToString();
 
             var handle = _resolver.GetHandle(request);
+            var entry = new PeerRegistryEntry(request.ToPeer(), handle);
 
-            _registry.Add(request.RegistrationId, new PeerRegistryEntry(request.ToPeer(), handle));
+            _registry.Add(request.RegistrationId, entry);
 
             Debug.WriteLine($"Registered peer {request.Name} with id {request.RegistrationId}");
+
+            PeerAdded?.Invoke(this, entry.Peer);
 
             //FIXME: Return another id as regid beacause it can be misidentified by another client.
             //Possibly try to use jwt token for registration id which can also be used for secure communication.
@@ -55,6 +60,8 @@ namespace EasyRpc.Master
 
             Debug.WriteLine($"Unregistered peer with id {request.RegistrationId}");
 
+            PeerRemoved?.Invoke(this, EventArgs.Empty);
+
             return await Task.FromResult(new RegistrationResponse
             {
                 RegistrationId = request.RegistrationId,
@@ -62,14 +69,12 @@ namespace EasyRpc.Master
             });
         }
 
-        public Task<Empty> Notify(Message message)
+        public async Task<Empty> Notify(Message message)
         {
             if (_registry.ContainsKey(message.From))
-            {
                 Notification?.Invoke(this, message);
-            }
 
-            return Task.FromResult<Empty>(new());
+            return await Task.FromResult<Empty>(new());
         }
 
         public async Task<Message> MakeRequest(Message message)
@@ -78,9 +83,7 @@ namespace EasyRpc.Master
 
             //TODO: Should context be passed to the peer handle?
             if (_registry.TryGetValue(message.To, out var client))
-            {
                 return await client.Handle.MakeRequest(message).ConfigureAwait(false);
-            }
 
             throw new PeerNotFoundException("Client not found");
         }

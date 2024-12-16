@@ -3,39 +3,39 @@ using EasyRpc.Types;
 
 internal class Program
 {
+    private static EasyRpcNetProvider _services;
+
     private static void Main(string[] args)
     {
         Program pg = new Program();
         var curPath = Directory.GetCurrentDirectory();
 
-        Console.WriteLine("Welcome to Peer1 service!");
-        EasyRpcNetProvider services = new EasyRpcNetProvider();
-        services.Start(
-            "https://localhost:50051",
-            "https://localhost:50052",
+        Console.WriteLine("Welcome to Peer1 service! Press any key when ready");
+        Console.ReadKey();
+
+        _services = new EasyRpcNetProvider();
+        _services.Start(
+            new Uri("https://localhost:50051"),
+            new Uri("https://localhost:50052"),
             pg.HandleRequest).Wait();
 
-        Console.WriteLine("Press any key to test message send");
+        Console.WriteLine("[PEER1]: Press any key to test message send");
         Console.ReadKey();
 
-        services.MasterClient.MakeRequest(new Message()
-        {
-            Data = "Hello from Peer1"
-        }).GetAwaiter().GetResult();
+        _services.Handle.Notify(new Message { Data = "Notification from Peer1" });
 
-        Console.WriteLine("Press any key to stop the service...");
+        Console.WriteLine("[PEER1]: Press any key to stop the service...");
         Console.ReadKey();
 
-        services.Stop();
+        _services.Stop();
     }
 
     public Task<Message> HandleRequest(Message message)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<Empty> HandleNotification(Message message)
-    {
-        throw new NotImplementedException();
+        Console.WriteLine("[PEER1]: Request from server: " + message.Data);
+        var response = new Message() { From = _services.Id, To = message.To, Type = message.Type };
+        response.Metadata.Add(message.Metadata);
+        response.Headers.Add(message.Headers);
+        return Task.FromResult(response);
     }
 }
