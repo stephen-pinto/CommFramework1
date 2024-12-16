@@ -29,8 +29,7 @@ namespace EasyRpc.Master
 
         public override async Task<Empty> Notify(Message message, ServerCallContext context)
         {
-            _notificationHandler(message);
-            return await Task.FromResult(new Empty());
+            return await _notificationHandler(message);
         }
     }
 }

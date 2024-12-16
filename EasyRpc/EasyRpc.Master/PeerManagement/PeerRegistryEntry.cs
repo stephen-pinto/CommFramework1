@@ -1,5 +1,4 @@
 ﻿using EasyRpc.Core.Client;
-using EasyRpc.Master.PeerBase;
 
 namespace EasyRpc.Master.PeerManagement
 {

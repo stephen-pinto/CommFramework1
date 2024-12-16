@@ -12,11 +12,13 @@ namespace EasyRpc.Master
     public partial class EasyRpcService : IEasyRpcServices
     {
         private readonly IPeerRegistry _registry;
-        private readonly IPeerMapper _peerMapper;
         private readonly IPeerClientResolver _resolver;
         private readonly ICertificateProvider _serverCertificateProvider;
         private readonly List<IEasyRpcPlugin> _plugins;
         public event EventHandler<Message>? Notification;
+
+        //TODO: This will be used to indetify what targets we want to communicate with and their addr.
+        public IReadOnlyCollection<PeerInfo> PeerList => _registry.Values.Select(x => x.Peer).ToList();
 
         public EasyRpcService(string serviceHost, int port, IPeerClientResolver peerClientResolver)
         {
@@ -67,16 +69,12 @@ namespace EasyRpc.Master
                 Notification?.Invoke(this, message);
             }
 
-            return Task.FromResult(new Empty());
+            return Task.FromResult<Empty>(new());
         }
 
         public async Task<Message> MakeRequest(Message message)
         {
-            if (string.IsNullOrWhiteSpace(message.To))
-            {
-                if (!_peerMapper.HasAnyCriteria)
-                    throw new PeerNotFoundException("Could not find peer");
-            }
+            PeerNotFoundException.ThrowIfNullOrEmpty(message.To);
 
             //TODO: Should context be passed to the peer handle?
             if (_registry.TryGetValue(message.To, out var client))
