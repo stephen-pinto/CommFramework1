@@ -13,8 +13,7 @@ internal class Program
         services.Start(
             "https://localhost:50051",
             "https://localhost:50052",
-            "https://localhost:50055",
-            pg.HandleRequest, pg.HandleNotification).Wait();
+            pg.HandleRequest).Wait();
 
         Console.WriteLine("Press any key to test message send");
         Console.ReadKey();

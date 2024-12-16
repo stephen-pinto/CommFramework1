@@ -10,6 +10,7 @@ namespace EasyRpc.Plugin.SignalR
         private readonly SignalRPeerHub _peerHub;
         private readonly ISigrPeerClientStore _sigrPeerClientFactory;
         private readonly IPeerService _mainPeerClient;
+        public event NotifyDelegate? Notify;
 
         public PeerSigrBridge(IServiceProvider serviceProvider)
         {
@@ -32,14 +33,15 @@ namespace EasyRpc.Plugin.SignalR
             return Task.CompletedTask;
         }
 
+        private async Task NotifyHandler(string connectionId, MessageSigr message)
+        {
+            if (Notify != null)
+                await Notify(message);
+        }
+
         private async Task MakeRequestHandler(string connectionId, MessageSigr message)
         {
             await _mainPeerClient!.MakeRequest(message);
-        }
-
-        private async Task NotifyHandler(string connectionId, MessageSigr message)
-        {
-            await _mainPeerClient!.Notify(message);
         }
     }
 }

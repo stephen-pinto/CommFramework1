@@ -1,5 +1,5 @@
-﻿using EasyRpc.Master.Exceptions;
-using EasyRpc.Master.PeerBase;
+﻿using EasyRpc.Core.Client;
+using EasyRpc.Master.Exceptions;
 
 namespace EasyRpc.Master.PeerManagement
 {
