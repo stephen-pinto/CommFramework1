@@ -25,8 +25,6 @@ namespace EasyRpcMasterService
         }
 
         public void Dispose()
-        {
-            
-        }
+        { }
     }
 }

@@ -38,7 +38,7 @@ namespace EasyRpc.Plugin.SignalR
                 webBuilder
                    .UseKestrel(options =>
                    {
-                       options.Listen(System.Net.IPAddress.Loopback, 551155, listenOptions =>
+                       options.Listen(System.Net.IPAddress.Loopback, 55155, listenOptions =>
                        {
                            var connectionOptions = new HttpsConnectionAdapterOptions();
                            connectionOptions.ServerCertificate = certificate;

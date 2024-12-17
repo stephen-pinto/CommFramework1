@@ -3,7 +3,7 @@ using EasyRpc.Types;
 
 internal class Program
 {
-    private static EasyRpcNetProvider _services;
+    private static EasyRpcNetProvider? _services;
 
     private static void Main(string[] args)
     {
@@ -34,7 +34,7 @@ internal class Program
     public Task<Message> HandleRequest(Message message)
     {
         Console.WriteLine("[PEER1] Request from server: " + message.Data);
-        var response = new Message() { From = _services.Id, To = message.To, Type = message.Type };
+        var response = new Message() { From = _services!.Id, To = message.To, Type = message.Type };
         response.Metadata.Add(message.Metadata);
         response.Headers.Add(message.Headers);
         return Task.FromResult(response);

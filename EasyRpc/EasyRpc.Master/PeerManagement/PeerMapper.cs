@@ -23,9 +23,9 @@ namespace EasyRpc.Master.PeerManagement
         {
             foreach (var criteria in _criterias)
             {
-                if (criteria.TryGetMatchingPeer(sourcePeer, out PeerInfo matchedPeer))
+                if (criteria.TryGetMatchingPeer(sourcePeer, out PeerInfo? matchedPeer))
                 {
-                    return matchedPeer;
+                    return matchedPeer!;
                 }
             }
 
