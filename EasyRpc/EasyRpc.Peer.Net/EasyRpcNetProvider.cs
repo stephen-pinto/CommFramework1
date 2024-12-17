@@ -1,4 +1,4 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
 using EasyRpc.Core.Util;
 using EasyRpc.Master;
 using Grpc.Core;
@@ -9,10 +9,10 @@ namespace EasyRpc.Peer.Net
     public class EasyRpcNetProvider
     {
         private Server? _server;
-        private IMasterService? _masterClient;
+        private IMasterService? _masterHandle;
         private string? _registrationId { get; set; }
 
-        public IMasterService Handle => _masterClient!;
+        public IMasterService Handle => _masterHandle!;
 
         public string Id => _registrationId!;
 
@@ -31,8 +31,8 @@ namespace EasyRpc.Peer.Net
             _server.Start();
 
             //TODO: Move the masterPeerAddress to fetch from registration response
-            _masterClient = new EasyRpcMasterClient(masterAddress.OriginalString);
-            var response = await _masterClient.Register(new RegistrationRequest
+            _masterHandle = new EasyRpcMasterClient(masterAddress.OriginalString);
+            var response = await _masterHandle.Register(new RegistrationRequest
             {
                 Address = myAddress.OriginalString,
                 Name = "Peer1",
@@ -45,9 +45,13 @@ namespace EasyRpc.Peer.Net
 
         public void Stop()
         {
-            var task1 = _masterClient!.Unregister(new RegistrationRequest() { RegistrationId = _registrationId, Name = "Peer1", Type = "Grpc" });
+            Task task1;
+            if (_masterHandle!.IsConnected)
+                task1 = _masterHandle.Unregister(new RegistrationRequest() { RegistrationId = _registrationId, Name = "Peer1", Type = "Grpc" });
+            else
+                task1 = Task.CompletedTask;
             var task2 = _server!.ShutdownAsync();
-            Task.WaitAll([task1!, task2!]);
+            Task.WaitAll([task1, task2!]);
         }
     }
 }

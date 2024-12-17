@@ -1,4 +1,4 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
 using EasyRpc.Core.Util;
 using EasyRpc.Master;
 using EasyRpc.Types;
@@ -9,8 +9,11 @@ namespace EasyRpc.Peer.Net
     internal class EasyRpcMasterClient : IMasterService
     {
         private readonly MasterService.MasterServiceClient _masterConnection;
-        private readonly GrpcChannel _mChannel;
+        private readonly GrpcChannel _channel;
         private string? _id;
+        private bool _disposed;
+
+        public bool IsConnected => !_disposed;
 
         public EasyRpcMasterClient(string masterAddress)
         {
@@ -20,12 +23,12 @@ namespace EasyRpc.Peer.Net
             GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, serverCertProvider);
             GrpcChannelSecurityHelper.SetClientCertificates(handler, clientCertProvider);
 
-            _mChannel = GrpcChannel.ForAddress(masterAddress, new GrpcChannelOptions
+            _channel = GrpcChannel.ForAddress(masterAddress, new GrpcChannelOptions
             {
                 HttpClient = new HttpClient(handler)
             });
 
-            _masterConnection = new MasterService.MasterServiceClient(_mChannel);
+            _masterConnection = new MasterService.MasterServiceClient(_channel);
         }
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
@@ -50,7 +53,8 @@ namespace EasyRpc.Peer.Net
 
         public void Dispose()
         {
-            _mChannel.ShutdownAsync().Wait();
+            _channel.ShutdownAsync().Wait();
+            _disposed = true;
         }
     }
 }

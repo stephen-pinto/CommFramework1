@@ -1,13 +1,13 @@
 ﻿using EasyRpc.Master;
 using EasyRpc.Types;
 
-namespace EasyRpc.Core.Client
+namespace EasyRpc.Core.Base
 {
     public delegate Task<RegistrationResponse> RegisterDelegate(RegistrationRequest request);
     public delegate Task<RegistrationResponse> UnregisterDelegate(RegistrationRequest request);
     public delegate Task<Empty> NotifyDelegate(Message message);
 
-    public interface IMasterService : IDisposable
+    public interface IMasterService : IDisposable, IRpcServiceBase
     {
         Task<RegistrationResponse> Register(RegistrationRequest request);
 

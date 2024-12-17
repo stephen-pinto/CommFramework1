@@ -1,4 +1,5 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
+using EasyRpc.Core.Client;
 using EasyRpc.Core.Util;
 
 namespace EasyRpc.Master.PeerBase

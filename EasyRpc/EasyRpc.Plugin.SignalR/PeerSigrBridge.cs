@@ -1,4 +1,4 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
 using EasyRpc.Plugin.SignalR.Interfaces;
 using EasyRpc.Plugin.SignalR.Types;
 using Microsoft.Extensions.DependencyInjection;

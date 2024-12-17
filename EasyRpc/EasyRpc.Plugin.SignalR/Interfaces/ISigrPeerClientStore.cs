@@ -1,4 +1,4 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
 using EasyRpc.Plugin.SignalR.Types;
 
 namespace EasyRpc.Plugin.SignalR.Interfaces

@@ -1,8 +1,8 @@
-﻿using EasyRpc.Core.Client;
-using EasyRpc.Core.Plugin;
+﻿using EasyRpc.Core.Plugin;
 using EasyRpc.Master.PeerManagement;
 using EasyRpc.Master;
 using EasyRpc.Plugin.SignalR;
+using EasyRpc.Core.Base;
 
 namespace EasyRpcMasterService
 {

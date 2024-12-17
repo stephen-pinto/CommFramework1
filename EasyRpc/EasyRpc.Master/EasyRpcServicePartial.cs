@@ -8,7 +8,9 @@ namespace EasyRpc.Master
         private readonly string _serviceHost;
         private readonly int _port;
         private Server? _masterServer;
-        
+
+        public bool IsConnected => _masterServer != null;
+
         public void Start()
         {
             SetupMasterServer();
@@ -18,6 +20,7 @@ namespace EasyRpc.Master
 
         public void Stop()
         {
+            _masterServer = null;
             Task.WaitAll(_masterServer!.ShutdownAsync());
             foreach (var plugin in _plugins)
                 plugin.Unload();

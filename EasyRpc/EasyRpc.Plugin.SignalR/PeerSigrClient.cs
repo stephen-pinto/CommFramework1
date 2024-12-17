@@ -1,4 +1,4 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
 using EasyRpc.Plugin.SignalR.Interfaces;
 using EasyRpc.Plugin.SignalR.Types;
 using EasyRpc.Types;
@@ -17,6 +17,8 @@ namespace EasyRpc.Plugin.SignalR
         public RegistrationRequestSigr Registration => _registration;
 
         public string ConnectionId => _sigrConnectionId;
+
+        public bool IsConnected => !string.IsNullOrEmpty(_sigrConnectionId);
 
         public PeerSigrClient(
             SignalRPeerHub hub,
@@ -45,6 +47,11 @@ namespace EasyRpc.Plugin.SignalR
             MessageSigr messageSigr = message;
             await _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(_refInterface.Notify), messageSigr);
             return new Empty();
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }
