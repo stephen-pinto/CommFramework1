@@ -12,12 +12,13 @@ internal class Program
 
         Console.WriteLine("Welcome to Peer1 service! Press any key when ready");
         Console.ReadKey();
-
+        var servAddr = new Uri("https://localhost:5001");
+        var myAddr = new Uri("https://localhost:50051");
         _services = new EasyRpcNetProvider();
         _services.Start(
-            new Uri("https://localhost:50051"),
-            new Uri("https://localhost:50052"),
-            pg.HandleRequest).Wait();
+            servAddr,
+            myAddr,
+            pg.HandleRequest).GetAwaiter().GetResult();
 
         Console.WriteLine("[PEER1]: Press any key to test message send");
         Console.ReadKey();
@@ -32,7 +33,7 @@ internal class Program
 
     public Task<Message> HandleRequest(Message message)
     {
-        Console.WriteLine("[PEER1]: Request from server: " + message.Data);
+        Console.WriteLine("[PEER1] Request from server: " + message.Data);
         var response = new Message() { From = _services.Id, To = message.To, Type = message.Type };
         response.Metadata.Add(message.Metadata);
         response.Headers.Add(message.Headers);

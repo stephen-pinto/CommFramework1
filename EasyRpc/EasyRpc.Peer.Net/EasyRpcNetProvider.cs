@@ -31,7 +31,7 @@ namespace EasyRpc.Peer.Net
             _server.Start();
 
             //TODO: Move the masterPeerAddress to fetch from registration response
-            _masterClient = new EasyRpcMasterClient(masterAddress.AbsolutePath);
+            _masterClient = new EasyRpcMasterClient(masterAddress.OriginalString);
             var response = await _masterClient.Register(new RegistrationRequest
             {
                 Address = myAddress.AbsolutePath,

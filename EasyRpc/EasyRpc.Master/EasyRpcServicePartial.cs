@@ -33,7 +33,7 @@ namespace EasyRpc.Master
                         _serviceHost,
                         _port,
                         GrpcChannelSecurityHelper.GetSecureServerCredentials(_serverCertificateProvider))
-                    }
+                }
             };
 
             _masterServer.Start();
