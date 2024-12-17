@@ -23,6 +23,8 @@ namespace EasyRpc.Master
         //TODO: This will be used to indetify what targets we want to communicate with and their addr.
         public IReadOnlyCollection<PeerInfo> PeerList => _registry.Values.Select(x => x.Peer).ToList();
 
+        public string Id { get; } = Guid.NewGuid().ToString();
+
         public EasyRpcService(Uri uri, IPeerClientResolver peerClientResolver)
         {
             _serviceHost = uri.Host;

@@ -22,8 +22,4 @@
 		<Protobuf Include="Protos\EasyRpcMaster.proto" GrpcServices="Both" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Server\" />
-	</ItemGroup>
-
 </Project>

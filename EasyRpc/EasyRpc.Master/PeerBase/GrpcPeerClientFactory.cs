@@ -12,7 +12,7 @@ namespace EasyRpc.Master.PeerBase
             ICertificateProvider clientCertificateProvider = new DefaultClientCertificateProvider();
             HttpClientHandler handler = new HttpClientHandler();
             //FIXME: Seems weird that we are using server certificate here should be client technically...
-            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, serverCertificateProvider);
+            GrpcChannelSecurityHelper.SetAutoTrustedServerCertificates(handler, clientCertificateProvider);
             GrpcChannelSecurityHelper.SetClientCertificates(handler, clientCertificateProvider);
             return new GrpcPeerClient(registerationRequest.Address, handler);
         }

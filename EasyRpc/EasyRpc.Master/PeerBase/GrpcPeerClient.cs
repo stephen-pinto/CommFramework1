@@ -24,8 +24,8 @@ namespace EasyRpc.Master.PeerBase
 
         public GrpcPeerClient(string address, GrpcChannelOptions channelOptions)
         {
-            var channel = GrpcChannel.ForAddress(address, channelOptions);
-            _client = new PeerService.PeerServiceClient(channel);
+            _channel = GrpcChannel.ForAddress(address, channelOptions);
+            _client = new PeerService.PeerServiceClient(_channel);
         }
 
         public async Task<Message> MakeRequest(Message message)

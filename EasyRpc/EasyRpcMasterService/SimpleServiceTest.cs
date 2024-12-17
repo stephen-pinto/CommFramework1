@@ -1,6 +1,7 @@
 ﻿using EasyRpc.Core.Base;
 using EasyRpc.Master;
 using EasyRpc.Master.PeerManagement;
+using EasyRpc.Types;
 
 namespace EasyRpcMasterService
 {
@@ -19,8 +20,16 @@ namespace EasyRpcMasterService
 
             service.Notification += Service_Notification;
 
+            Console.WriteLine("Press any key to send a message...");
+            Console.ReadKey();
+
+            var peer = service.PeerList.First();
+            var msg = new Message() { To = peer.Id, Data = "Order from master", From = service.Id, Type = MessageType.Request, Id = Guid.NewGuid().ToString() };
+            service.MakeRequest(msg);
+
             Console.WriteLine("Press any key to stop the service...");
             Console.ReadKey();
+
 
             //Stop all services and unload the plugins
             service.Stop();

@@ -20,8 +20,8 @@ namespace EasyRpc.Master
 
         public void Stop()
         {
-            _masterServer = null;
             Task.WaitAll(_masterServer!.ShutdownAsync());
+            _masterServer = null;
             foreach (var plugin in _plugins)
                 plugin.Unload();
         }

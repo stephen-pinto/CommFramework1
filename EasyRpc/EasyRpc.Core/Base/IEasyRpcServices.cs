@@ -6,6 +6,8 @@ namespace EasyRpc.Core.Base
 {
     public interface IEasyRpcServices : IMasterService, IPeerService
     {
+        string Id { get; }
+
         event EventHandler<Message> Notification;
 
         event EventHandler<PeerInfo> PeerAdded;
