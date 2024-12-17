@@ -8,7 +8,7 @@ namespace EasyRpc.Plugin.SignalR
 {
     public class PeerSigrClient : IPeerService
     {
-        private string _sigrConnectionId;
+        private readonly string _sigrConnectionId;
         private readonly IEasyRpcSignalRHub _refInterface;
         private readonly SignalRPeerHub _hubRef;
         private readonly ResponseAwaiter _responseAwaiter;
@@ -42,16 +42,7 @@ namespace EasyRpc.Plugin.SignalR
             return (Message)response;
         }
 
-        public async Task<Empty> Notify(Message message)
-        {
-            MessageSigr messageSigr = message;
-            await _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(_refInterface.Notify), messageSigr);
-            return new Empty();
-        }
-
         public void Dispose()
-        {
-            
-        }
+        { }
     }
 }

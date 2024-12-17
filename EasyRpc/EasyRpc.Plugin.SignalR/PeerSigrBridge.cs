@@ -8,8 +8,7 @@ namespace EasyRpc.Plugin.SignalR
     public class PeerSigrBridge
     {
         private readonly SignalRPeerHub _peerHub;
-        private readonly ISigrPeerClientStore _sigrPeerClientFactory;
-        private readonly IPeerService _mainPeerClient;
+        private readonly ISigrPeerClientStore _clientStore;
         public event NotifyDelegate? Notify;
 
         public PeerSigrBridge(IServiceProvider serviceProvider)
@@ -17,19 +16,18 @@ namespace EasyRpc.Plugin.SignalR
             _peerHub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
             _peerHub!.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
 
-            _mainPeerClient = serviceProvider.GetService<IPeerService>() ?? throw new TypeInitializationException("IPeerClient not initialized", null);
-            _sigrPeerClientFactory = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
+            _clientStore = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
         }
 
         private Task RegisterHandler(string connectionId, RegistrationRequestSigr request)
         {
-            _sigrPeerClientFactory.AddNewRegisteredClient(connectionId, request);
+            _clientStore.AddNewRegisteredClient(connectionId, request);
             return Task.CompletedTask;
         }
 
         private Task UnregisterHandler(string connectionId, RegistrationRequestSigr request)
         {
-            _sigrPeerClientFactory.RemoveClient(connectionId);
+            _clientStore.RemoveClient(connectionId);
             return Task.CompletedTask;
         }
 
@@ -41,7 +39,8 @@ namespace EasyRpc.Plugin.SignalR
 
         private async Task MakeRequestHandler(string connectionId, MessageSigr message)
         {
-            await _mainPeerClient!.MakeRequest(message);
+            //TODO: We dont need to handle it at master end
+            await Task.FromException<NotImplementedException>(new NotImplementedException("MakeRequestHandler not implemented"));
         }
     }
 }

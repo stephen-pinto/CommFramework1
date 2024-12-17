@@ -11,9 +11,9 @@ namespace EasyRpc.Master.PeerManagement
             _registry = registry;
         }
 
-        public bool TryGetMatchingPeer(PeerInfo sourcePeer, out PeerInfo matchedPeer)
+        public bool TryGetMatchingPeer(PeerInfo sourcePeer, out PeerInfo? matchedPeer)
         {
-            ReadOnlySpan<PeerRegistryEntry> peers = new ReadOnlySpan<PeerRegistryEntry>(_registry.Values.ToArray());
+            var peers = new ReadOnlySpan<PeerRegistryEntry>(_registry.Values.ToArray());
             foreach (var item in peers)
             {
                 if (item.Peer.Type == sourcePeer.Type)
@@ -23,7 +23,23 @@ namespace EasyRpc.Master.PeerManagement
                 }
             }
 
-            matchedPeer = null!;
+            matchedPeer = null;
+            return false;
+        }
+
+        public bool TryGetMatchingPeer(Func<PeerInfo, bool> matchCondition, out PeerInfo? matchedPeer)
+        {
+            var peers = new ReadOnlySpan<PeerRegistryEntry>(_registry.Values.ToArray());
+            foreach (var item in peers)
+            {
+                if(matchCondition(item.Peer))
+                {
+                    matchedPeer = item.Peer;
+                    return true;
+                }
+            }
+
+            matchedPeer = null;
             return false;
         }
     }

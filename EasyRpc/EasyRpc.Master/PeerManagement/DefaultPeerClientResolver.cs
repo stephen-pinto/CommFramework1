@@ -11,6 +11,7 @@ namespace EasyRpc.Master.PeerManagement
     {
         public DefaultPeerClientResolver()
         {
+            // Default to Grpc
             this.Add("Grpc", new GrpcPeerClientFactory());
         }
 
