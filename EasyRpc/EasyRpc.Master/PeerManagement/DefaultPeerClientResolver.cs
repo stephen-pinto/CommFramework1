@@ -1,4 +1,5 @@
 ﻿using EasyRpc.Core.Client;
+using EasyRpc.Master.PeerBase;
 
 namespace EasyRpc.Master.PeerManagement
 {
@@ -7,6 +8,11 @@ namespace EasyRpc.Master.PeerManagement
     /// </summary>
     public class DefaultPeerClientResolver : Dictionary<string, IPeerClientFactory>, IPeerClientResolver
     {
+        public DefaultPeerClientResolver()
+        {
+            this.Add("Grpc", new GrpcPeerClientFactory());
+        }
+
         public void AddFactory(string identifier, IPeerClientFactory peerClient)
         {
             Add(identifier, peerClient);
@@ -16,8 +22,8 @@ namespace EasyRpc.Master.PeerManagement
         {
             if (ContainsKey(request.Type))
                 return this[request.Type].GetHandle(request);
-
-            throw new NotSupportedException($"Peer type {request.Type} is not supported");
+            else
+                return this["Grpc"].GetHandle(request);
         }
     }
 }

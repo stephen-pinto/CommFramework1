@@ -34,7 +34,7 @@ namespace EasyRpc.Peer.Net
             _masterClient = new EasyRpcMasterClient(masterAddress.OriginalString);
             var response = await _masterClient.Register(new RegistrationRequest
             {
-                Address = myAddress.AbsolutePath,
+                Address = myAddress.OriginalString,
                 Name = "Peer1",
                 Type = "Grpc",
                 Properties = { { "OS", "Windows" }, { "Version", "10" } },

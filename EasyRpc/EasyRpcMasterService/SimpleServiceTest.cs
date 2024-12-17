@@ -8,7 +8,11 @@ namespace EasyRpcMasterService
     {
         public static void Run()
         {
-            IEasyRpcServices service = new EasyRpcService(new Uri("https://localhost:5001"), new DefaultPeerClientResolver());
+            var resolver = new DefaultPeerClientResolver();
+
+            IEasyRpcServices service = new EasyRpcService(
+                new Uri("https://localhost:5001"), 
+                new DefaultPeerClientResolver());
 
             //Start all the services and load all the plugins
             service.Start();
