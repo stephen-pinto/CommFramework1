@@ -15,7 +15,7 @@ namespace EasyRpc.Master
         {
             SetupMasterServer();
             foreach (var plugin in _plugins)
-                plugin.Load();
+                plugin.Load(this);
         }
 
         public void Stop()

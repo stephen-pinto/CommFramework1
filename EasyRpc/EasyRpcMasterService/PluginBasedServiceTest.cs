@@ -14,7 +14,7 @@ namespace EasyRpcMasterService
 
             //Setup plugins to use the main service directly
             IEasyRpcPlugin sigrPlugin = new SignalRPlugin();
-            sigrPlugin.Init(new SignalRPluginConfiguration() { MasterClient = service, MainPeerClient = service });
+            sigrPlugin.Init(new SignalRPluginConfiguration());
 
             //var backendPlugin = new BackendClientPlugin();
             //backendPlugin.Init(new BackendPluginConfiguration() { MasterClient = service, MainPeerClient = service });
@@ -33,9 +33,6 @@ namespace EasyRpcMasterService
 
             //Stop all services and unload the plugins
             service.Stop();
-
-            //SignalRPeerService.SignalRService service = new SignalRPeerService.SignalRService();
-            //service.Start();
         }
     }
 }

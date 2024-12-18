@@ -6,7 +6,7 @@ namespace MasterService
     {
         static void Main(string[] args)
         {
-            SimpleServiceTest.Run();
+            PluginBasedServiceTest.Run();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
+using EasyRpc.Core.Client;
 
 namespace EasyRpc.Core.Plugin
 {
@@ -8,7 +9,7 @@ namespace EasyRpc.Core.Plugin
 
         public void Init(IEasyRpcPluginConfiguration config);
 
-        public void Load();
+        public void Load(IMasterService masterService);
 
         public void Unload();
 

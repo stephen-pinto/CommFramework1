@@ -1,4 +1,5 @@
-﻿using EasyRpc.Core.Client;
+﻿using EasyRpc.Core.Base;
+using EasyRpc.Core.Client;
 using EasyRpc.Core.Plugin;
 using EasyRpc.Plugin.SignalR.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +15,7 @@ namespace EasyRpc.Plugin.SignalR
     {
         private WebApplication? _app;
         private WebApplicationBuilder? _builder;
+        private IMasterService? _masterService;
 
         public string TypeIdentifier => "SignalRClient";
 
@@ -30,39 +32,36 @@ namespace EasyRpc.Plugin.SignalR
             var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
             var certificate = store.Certificates.OfType<X509Certificate2>()
-                .First(c => c.FriendlyName ==
-                "SigR Server Authorization");
+                .First(c => c.FriendlyName == sconfig.CertificateFriendlyName);
 
-            _builder.Host.ConfigureWebHostDefaults(webBuilder =>
+            _builder.WebHost.ConfigureKestrel(options =>
             {
-                webBuilder
-                   .UseKestrel(options =>
-                   {
-                       options.Listen(System.Net.IPAddress.Loopback, 55155, listenOptions =>
-                       {
-                           var connectionOptions = new HttpsConnectionAdapterOptions();
-                           connectionOptions.ServerCertificate = certificate;
-                           listenOptions.UseHttps(connectionOptions);
-                       });
-                   });
+                options.Listen(System.Net.IPAddress.Loopback, sconfig.HubAddress.Port, listenOptions =>
+                {
+                    var connectionOptions = new HttpsConnectionAdapterOptions();
+                    connectionOptions.ServerCertificate = certificate;
+                    listenOptions.UseHttps(connectionOptions);
+                });
             });
 
             _builder.Services.AddSignalR();
             _builder.Services.AddSingleton<ResponseAwaiter>();
-            _builder.Services.AddSingleton(sconfig.MasterClient!);
+            _builder.Services.AddTransient<IMasterService>((_) => _masterService!);
             _builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
             _builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
+            _builder.Services.AddSingleton<SignalRPeerHub>();
             _app = _builder.Build();
+            _app.MapHub<SignalRPeerHub>(sconfig.EndpointPath);
             _app.UseHttpsRedirection();
             _app.UseStaticFiles();
             _app.UseRouting();
-            _app.MapHub<SignalRPeerHub>("/peer");
             _app.UseCors("AllowAll");
             //_app.Urls.Add("https://localhost:5001");
         }
 
-        public void Load()
+        public void Load(IMasterService masterService)
         {
+            _masterService = masterService;
             _app!.Run();
         }
 

@@ -8,15 +8,18 @@ namespace EasyRpc.Plugin.SignalR
 {
     public class DefaultSigrPeerClientStore : ISigrPeerClientStore
     {
-        private readonly IMasterService _masterHandle;
         private readonly SignalRPeerHub _hub;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly Dictionary<string, IPeerService> _clients;
+        private readonly IServiceProvider _serviceProvider;
+        private IMasterService? _masterHandle;
+
+        private IMasterService MasterHandle => _masterHandle ??= _serviceProvider.GetService<IMasterService>() ?? throw new TypeInitializationException("MasterService not initialized", null);
 
         public DefaultSigrPeerClientStore(IServiceProvider serviceProvider)
         {
             _hub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
-            _masterHandle = serviceProvider.GetService<IMasterService>() ?? throw new TypeInitializationException("IMasterClient not initialized", null);
+            _serviceProvider = serviceProvider;
             _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>() ?? throw new TypeInitializationException("ResponseAwaiter not initialized", null);
             _clients = new Dictionary<string, IPeerService>();
         }
@@ -32,7 +35,7 @@ namespace EasyRpc.Plugin.SignalR
             RegistrationRequest registerationRequest = registration;
             //TODO: Change this to something unique and different then connection id
             registerationRequest.Properties.Add(CommonConstants.SigrReferenceTag, connectionId);
-            var result = _masterHandle.Register(registerationRequest).GetAwaiter().GetResult();
+            var result = MasterHandle.Register(registerationRequest).GetAwaiter().GetResult();
             if (result.Status != "Success")
                 throw new Exception("Registration failed");
             registration.RegistrationId = result.RegistrationId;
@@ -45,7 +48,7 @@ namespace EasyRpc.Plugin.SignalR
             PeerSigrClient sigrPeerClient = (PeerSigrClient)_clients[connectionId];
             _clients.Remove(connectionId);
             RegistrationRequest registerationRequest = sigrPeerClient.Registration;
-            var result = _masterHandle.Unregister(registerationRequest).GetAwaiter().GetResult();
+            var result = MasterHandle.Unregister(registerationRequest).GetAwaiter().GetResult();
             if (result.Status != "Success")
                 throw new Exception("Unregistration failed");
         }

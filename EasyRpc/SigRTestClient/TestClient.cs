@@ -2,44 +2,37 @@
 
 namespace SigRTestClient
 {
-    public record MessageSigr(
-            string To,
-            string From,
-            string Id,
-            string Type,
-            string Data,
-            Dictionary<string, string> Metadata,
-            Dictionary<string, string> Headers);
-
-    public class RegistrationRequestSigr
-    {
-        public string? RegistrationId { get; set; }
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public Dictionary<string, string> Properties { get; set; }
-    }
-
-    public class RegistrationResponseSigr
-    {
-        public string? RegistrationId { get; set; }
-        public string? Status { get; set; }
-        public string? Message { get; set; }
-    }
-
     internal class TestClient
     {
+        private string _id = string.Empty;
+        private string _type = "SigR";
+        private string _peerId = string.Empty;
+
         internal void Run()
         {
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:55155/peer")
                 .Build();
 
+            //Handle registration
+            connection.On<RegistrationResponseSigr>("RegisterResponse", (message) =>
+            {
+                Console.WriteLine($"[HUB]: {message}");
+                _id = message.RegistrationId;
+            });
+            connection.InvokeAsync(_peerId, new RegistrationRequestSigr(_peerId, _type, "SigRClient1"));
+
+            //Handle requests
             connection.On<MessageSigr>("MakeRequest", (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
-                connection.InvokeAsync("SendMakeRequestResponse", new MessageSigr() { From =  });
+                connection.InvokeAsync("SendMakeRequestResponse",
+                    new MessageSigr(_peerId, _id,
+                    message.Id, _type, 
+                    "This is some data from SigR Client/Peer for Request: " + message.Data));
             });
 
+            //Handle close and reconnect
             connection.Closed += async (error) =>
             {
                 await Task.Delay(new Random().Next(0, 5) * 1000);
