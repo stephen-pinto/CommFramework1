@@ -6,7 +6,11 @@ namespace EasyRpc.Plugin.SignalR.Interfaces
     public interface ISigrPeerClientStore
     {
         IPeerService GetClient(string connectionId);
-        IPeerService AddNewRegisteredClient(string connectionId, RegistrationRequestSigr registration);
+        
+        IPeerService AddClient(string connectionId, RegistrationRequestSigr registration);
+        
         void RemoveClient(string connectionId);
+
+        public RegistrationRequestSigr GetRegistration(string connectionId);
     }
 }

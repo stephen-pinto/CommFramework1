@@ -49,6 +49,7 @@ namespace EasyRpc.Plugin.SignalR
             _builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
             _builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
             _builder.Services.AddSingleton<SignalRPeerHub>();
+            _builder.Services.AddSingleton<PeerSigrBridge>();
             _app = _builder.Build();
             _app.MapHub<SignalRPeerHub>(sconfig.EndpointPath);
             _app.UseHttpsRedirection();
