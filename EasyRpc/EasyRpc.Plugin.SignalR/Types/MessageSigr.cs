@@ -2,34 +2,39 @@
 
 namespace EasyRpc.Plugin.SignalR.Types
 {
-    //public enum MessageTypeSigr
-    //{
-    //    NONE,
-    //    REQUEST,
-    //    RESPONSE,
-    //    NOTIFICATION,
-    //    ERROR
-    //}
+    public enum MessageTypeSigr
+    {
+        None = 0,
+        Request = 1,
+        Response = 2,
+        Notification = 3,
+        Error = 4,
+        Telemetry = 5,
+    }
 
     public record MessageSigr(
             string To,
             string From,
             string Id,
-            string Type,
-            string Data,
-            Dictionary<string, string> Metadata,
-            Dictionary<string, string> Headers)
+            MessageTypeSigr Type,
+            string Data)
     {
+        public Dictionary<string, string> Metadata { get; set; } = new();
+
+        public Dictionary<string, string> Headers { get; set; } = new();
+
         public static implicit operator MessageSigr(Message protoMessage)
         {
-            return new MessageSigr(
+            var instance = new MessageSigr(
                 protoMessage.To,
                 protoMessage.From,
                 protoMessage.Id,
-                protoMessage.Type.ToString(),
-                protoMessage.Data,
-                protoMessage.Metadata.Any() ? protoMessage.Metadata.ToDictionary() : new Dictionary<string, string>(),
-                protoMessage.Headers.Any() ? protoMessage.Headers.ToDictionary() : new Dictionary<string, string>());
+                Enum.Parse<MessageTypeSigr>(protoMessage.Type.ToString()),
+                protoMessage.Data);
+
+            instance.Metadata = protoMessage.Metadata.Any() ? protoMessage.Metadata.ToDictionary() : new Dictionary<string, string>();
+            instance.Headers = protoMessage.Headers.Any() ? protoMessage.Headers.ToDictionary() : new Dictionary<string, string>();
+            return instance;
         }
 
         public static implicit operator Message(MessageSigr message)
@@ -38,7 +43,7 @@ namespace EasyRpc.Plugin.SignalR.Types
             protoMessage.To = message.To;
             protoMessage.From = message.From;
             protoMessage.Id = message.Id;
-            protoMessage.Type = Enum.Parse<MessageType>(message.Type);
+            protoMessage.Type = Enum.Parse<MessageType>(message.Type.ToString());
             protoMessage.Data = message.Data;
             protoMessage.Metadata.MergeFrom(message.Metadata);
             protoMessage.Headers.MergeFrom(message.Headers);

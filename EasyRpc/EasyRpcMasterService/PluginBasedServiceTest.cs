@@ -20,8 +20,19 @@ namespace EasyRpcMasterService
 
             service.PeerAdded += (sender, peerInfo) =>
                 {
-                    service.MakeRequest(
-                        new EasyRpc.Types.Message() { From = service.Id, To = peerInfo.Id, Type = EasyRpc.Types.MessageType.Request, Data = "Welcome to the world of EasyRPC!!!" });
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(3000);
+                        service.MakeRequest(
+                        new EasyRpc.Types.Message()
+                        {
+                            From = service.Id,
+                            To = peerInfo.Id,
+                            Id = Guid.NewGuid().ToString(),
+                            Type = EasyRpc.Types.MessageType.Request,
+                            Data = "Welcome to the world of EasyRPC!!!"
+                        });
+                    });
                 };
 
             //Start all the services and load all the plugins
@@ -32,11 +43,6 @@ namespace EasyRpcMasterService
 
             //Stop all services and unload the plugins
             service.Stop();
-        }
-
-        private static void PeerAdded(object? sender, EasyRpc.Core.Client.PeerInfo e)
-        {
-            Console.WriteLine("SERVER APP: Peer added with info => " + e);
         }
     }
 }

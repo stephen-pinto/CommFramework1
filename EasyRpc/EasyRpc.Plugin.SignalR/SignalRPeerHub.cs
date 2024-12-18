@@ -55,7 +55,8 @@ namespace EasyRpc.Plugin.SignalR
         public async Task SendMakeRequestResponse(MessageSigr message)
         {
             Console.WriteLine($"Sending response {message.Id}");
-            await Task.FromResult(() => _responseAwaiter!.SaveResponse(message.Id, message));
+            _responseAwaiter!.SaveResponse(message.Id, message);
+            await Task.CompletedTask;
         }
 
         public async Task Notify(MessageSigr message)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using System.Security.Cryptography;
 
 namespace SigRTestClient
 {
@@ -15,9 +16,9 @@ namespace SigRTestClient
 
     internal class TestClient
     {
-        private string _id = string.Empty;
+        private string _selfAddress = string.Empty;
         private string _type = "SignalRClient";
-        private string _peerId = string.Empty;
+        private string _peerAddress = string.Empty;
         private RegistrationRequestSigr? _registration;
 
         internal void Run()
@@ -45,22 +46,23 @@ namespace SigRTestClient
             connection.On<RegistrationResponseSigr>(nameof(IEasyRpcSignalRHub.SendRegisterResponse), (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
-                _id = message.RegistrationId;
+                _selfAddress = message.RegistrationId;
             });
 
             _registration = new RegistrationRequestSigr("", _type, "SigRClient1");
-            connection.InvokeAsync(nameof(IEasyRpcSignalRHub.Register), _registration);
+            connection.InvokeAsync(nameof(IEasyRpcSignalRHub.Register), _registration).GetAwaiter().GetResult();
 
             //Handle requests
             connection.On<MessageSigr>(nameof(IEasyRpcSignalRHub.MakeRequest), (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
-
+                _peerAddress = message.From;
+                
                 Task.Run(() =>
                 {
                     connection.InvokeAsync(nameof(IEasyRpcSignalRHub.SendMakeRequestResponse),
-                    new MessageSigr(_peerId, _id,
-                    message.Id, _type,
+                    new MessageSigr(_peerAddress, _selfAddress,
+                    message.Id, MessageTypeSigr.Response,
                     "This is some data from SigR Client/Peer for Request: " + message.Data));
                 });
             });

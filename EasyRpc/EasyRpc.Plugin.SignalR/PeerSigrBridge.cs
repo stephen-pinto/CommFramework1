@@ -24,7 +24,7 @@ namespace EasyRpc.Plugin.SignalR
             _clientStore = clientStore;
         }
 
-        private Task RegisterHandler(string connectionId, RegistrationRequestSigr registrationReq)
+        private async Task RegisterHandler(string connectionId, RegistrationRequestSigr registrationReq)
         {
             //We need to add the client first
             _clientStore.AddClient(connectionId, registrationReq);
@@ -33,7 +33,7 @@ namespace EasyRpc.Plugin.SignalR
             RegistrationRequest registerationRequest = registrationReq;
             //TODO: Change this to something unique and different then connection id
             registerationRequest.Properties.Add(CommonConstants.SigrReferenceTag, connectionId);
-            var result = MasterHandle.Register(registerationRequest).GetAwaiter().GetResult();
+            var result = await MasterHandle.Register(registerationRequest);
 
             if (result.Status != "Success")
             {
@@ -44,12 +44,10 @@ namespace EasyRpc.Plugin.SignalR
 
             registrationReq.RegistrationId = result.RegistrationId;
 
-            _hub.Clients
+            await _hub.Clients
                 .Client(connectionId)
                 .SendAsync(nameof(IEasyRpcSignalRHub.SendRegisterResponse),
                 new RegistrationResponseSigr() { RegistrationId = result.RegistrationId, Status = result.Status, Message = result.Message });
-
-            return Task.CompletedTask;
         }
 
         private Task UnregisterHandler(string connectionId, RegistrationRequestSigr request)

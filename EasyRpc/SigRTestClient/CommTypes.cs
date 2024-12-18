@@ -1,10 +1,20 @@
 ﻿namespace SigRTestClient
 {
+    public enum MessageTypeSigr
+    {
+        None = 0,
+        Request = 1,
+        Response = 2,
+        Notification = 3,
+        Error = 4,
+        Telemetry = 5,
+    }
+
     public record MessageSigr(
             string To,
             string From,
             string Id,
-            string Type,
+            MessageTypeSigr Type,
             string Data)
     {
         Dictionary<string, string> Metadata { get; set; } = new();

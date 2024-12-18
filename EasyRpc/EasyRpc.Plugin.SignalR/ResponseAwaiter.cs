@@ -17,7 +17,7 @@ namespace EasyRpc.Plugin.SignalR
         public MessageSigr AwaitResponse(string id, ManualResetEventSlim resetEventSlim, int timeout = 15000)
         {
             //Register the await event
-            _awaitingResponses.TryAdd(id, resetEventSlim);
+            _awaitingResponses.AddOrUpdate(id, (_) => resetEventSlim, (_, _) => resetEventSlim);
 
             //Wait for the response
             var waitResult = resetEventSlim.Wait(timeout);
@@ -32,15 +32,13 @@ namespace EasyRpc.Plugin.SignalR
             return response!;
         }
 
-        public async void SaveResponse(string id, MessageSigr response)
+        public void SaveResponse(string id, MessageSigr response)
         {
-            await Task.Factory.StartNew(() =>
+            if (_awaitingResponses.ContainsKey(id))
             {
                 _reponseStore.TryAdd(id, response);
-
-                if (_awaitingResponses.ContainsKey(id))
-                    _awaitingResponses[id].Set();
-            });
+                _awaitingResponses[id].Set();
+            }
         }
     }
 }
