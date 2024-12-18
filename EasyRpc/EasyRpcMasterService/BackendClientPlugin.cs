@@ -15,14 +15,14 @@ namespace EasyRpcMasterService
         private BackendPluginConfiguration? _configuration;
         private IMasterService? _masterService;
 
-        public string TypeIdentifier => "BackendClient";
+        private string TypeIdentifier => "BackendClient";
 
-        public IPeerClientFactory GetClientFactory()
+        public IReadOnlyDictionary<string, IPeerClientFactory> GetClientFactories()
         {
             if (_backendClient == null)
                 throw new ArgumentNullException("Not initialized. Call " + nameof(Init) + " first.");
 
-            return new BackendClientFactory(_backendClient);
+            return new Dictionary<string, IPeerClientFactory>() { { TypeIdentifier, new BackendClientFactory(_backendClient) } };
         }
 
         public void Init(IEasyRpcPluginConfiguration config)

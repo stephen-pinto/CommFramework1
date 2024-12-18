@@ -49,10 +49,7 @@ namespace EasyRpc.Plugin.SignalR
 
         public async Task MakeRequest(MessageSigr message)
         {
-            throw new NotSupportedException();
-            //_serviceProvider.GetRequiredService<PeerSigrBridge>();
-            //Console.WriteLine($"Making request {message.Id}");
-            //await _makeRequestHandler!(Context.ConnectionId, message);
+            await Task.FromException(new NotSupportedException());
         }
 
         public async Task SendMakeRequestResponse(MessageSigr message)

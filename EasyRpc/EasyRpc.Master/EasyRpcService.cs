@@ -94,7 +94,7 @@ namespace EasyRpc.Master
         public IEasyRpcServices UsePlugin(IEasyRpcPlugin plugin)
         {
             _plugins.Add(plugin);
-            _resolver.AddFactory(plugin.TypeIdentifier, plugin.GetClientFactory());
+            _resolver.AddFactory(plugin.GetClientFactories());
             return this;
         }
     }

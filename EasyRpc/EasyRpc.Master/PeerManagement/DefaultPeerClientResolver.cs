@@ -20,6 +20,14 @@ namespace EasyRpc.Master.PeerManagement
             Add(identifier, peerClient);
         }
 
+        public void AddFactory(IReadOnlyDictionary<string, IPeerClientFactory> factories)
+        {
+            foreach(var factory in factories)
+            {
+                Add(factory.Key, factory.Value);
+            }
+        }
+
         public IPeerService GetHandle(RegistrationRequest request)
         {
             if (ContainsKey(request.Type))

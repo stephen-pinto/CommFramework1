@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
 
 namespace EasyRpc.Plugin.SignalR
@@ -18,7 +17,7 @@ namespace EasyRpc.Plugin.SignalR
         private WebApplicationBuilder? _builder;
         private IMasterService? _masterService;
 
-        public string TypeIdentifier => "SignalRClient";
+        private string TypeIdentifier => "SignalRClient";
 
         public void Init(IEasyRpcPluginConfiguration config)
         {
@@ -74,9 +73,12 @@ namespace EasyRpc.Plugin.SignalR
             _app!.StopAsync().Wait();
         }
 
-        public IPeerClientFactory GetClientFactory()
+        public IReadOnlyDictionary<string, IPeerClientFactory> GetClientFactories()
         {
-            return _app!.Services.GetService<IPeerClientFactory>()!;
+            return new Dictionary<string, IPeerClientFactory>()
+            {
+                { TypeIdentifier, _builder!.Services.BuildServiceProvider().GetService<IPeerClientFactory>()! }
+            };
         }
     }
 }
