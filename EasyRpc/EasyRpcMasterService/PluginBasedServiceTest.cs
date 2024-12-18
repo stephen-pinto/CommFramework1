@@ -3,6 +3,7 @@ using EasyRpc.Master.PeerManagement;
 using EasyRpc.Master;
 using EasyRpc.Plugin.SignalR;
 using EasyRpc.Core.Base;
+using EasyRpc.Core.Client;
 
 namespace EasyRpcMasterService
 {
@@ -20,23 +21,26 @@ namespace EasyRpcMasterService
 
             service.PeerAdded += (sender, peerInfo) =>
                 {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(3000);
-                        service.MakeRequest(
-                        new EasyRpc.Types.Message()
-                        {
-                            From = service.Id,
-                            To = peerInfo.Id,
-                            Id = Guid.NewGuid().ToString(),
-                            Type = EasyRpc.Types.MessageType.Request,
-                            Data = "Welcome to the world of EasyRPC!!!"
-                        });
-                    });
+                    Console.WriteLine("[SERVER APP] Peer added: " + peerInfo);
                 };
 
             //Start all the services and load all the plugins
             service.Start();
+
+            Console.WriteLine("Service started. Press any key to send a message...");
+            Console.ReadKey();
+
+            var response = service.MakeRequest(
+                        new EasyRpc.Types.Message()
+                        {
+                            From = service.Id,
+                            To = service.PeerList.First().Id,
+                            Id = Guid.NewGuid().ToString(),
+                            Type = EasyRpc.Types.MessageType.Request,
+                            Data = "Welcome to the world of EasyRPC!!!"
+                        });
+
+            Console.WriteLine("[SERVER APP] Response: " + response.Result);
 
             Console.WriteLine("Press any key to stop the service...");
             Console.ReadKey();
