@@ -16,7 +16,7 @@ namespace SigRTestClient
     internal class TestClient
     {
         private string _id = string.Empty;
-        private string _type = "SigR";
+        private string _type = "SignalRClient";
         private string _peerId = string.Empty;
         private RegistrationRequestSigr? _registration;
 
@@ -25,8 +25,21 @@ namespace SigRTestClient
             Thread.Sleep(2000);
 
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:55155/peer")
+                .WithUrl("https://127.0.0.1:55155/peer", opts =>
+                {
+                    opts.HttpMessageHandlerFactory = (handler) =>
+                    {
+                        if (handler is HttpClientHandler clientHandler)
+                        {
+                            // clientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                            clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                        }
+                        return handler;
+                    };
+                })
                 .Build();
+
+            connection.StartAsync();
 
             //Handle registration
             connection.On<RegistrationResponseSigr>(nameof(IEasyRpcSignalRHub.SendRegisterResponse), (message) =>
@@ -44,7 +57,7 @@ namespace SigRTestClient
                 Console.WriteLine($"[HUB]: {message}");
                 connection.InvokeAsync(nameof(IEasyRpcSignalRHub.SendMakeRequestResponse),
                     new MessageSigr(_peerId, _id,
-                    message.Id, _type, 
+                    message.Id, _type,
                     "This is some data from SigR Client/Peer for Request: " + message.Data));
             });
 

@@ -7,50 +7,52 @@ namespace EasyRpc.Plugin.SignalR
 {
     public delegate Task RegisterHandler(string connectionId, RegistrationRequestSigr request);
     public delegate Task UnregisterHandler(string connectionId, RegistrationRequestSigr request);
-    public delegate Task MakeRequestHandler(string connectionId, MessageSigr message);
     public delegate Task NotifyHandler(string connectionId, MessageSigr message);
 
     public class SignalRPeerHub : Hub, IEasyRpcSignalRHub
     {
         private ResponseAwaiter? _responseAwaiter;
         private RegisterHandler? _registerHandler;
-        private MakeRequestHandler? _makeRequestHandler;
         private UnregisterHandler? _unregisterHandler;
         private NotifyHandler? _notifyHandler;
+        private readonly IServiceProvider _serviceProvider;
 
         public SignalRPeerHub(IServiceProvider serviceProvider)
         {
-            _responseAwaiter = serviceProvider.GetService<ResponseAwaiter>();
+            _serviceProvider = serviceProvider;
+            _responseAwaiter = _serviceProvider.GetService<ResponseAwaiter>();
         }
 
         public void SetupHandlers(
             RegisterHandler registerHandler,
             UnregisterHandler unregisterHandler,
-            MakeRequestHandler makeRequestHandler,
             NotifyHandler notifyHandler)
         {
             _registerHandler = registerHandler;
-            _makeRequestHandler = makeRequestHandler;
             _unregisterHandler = unregisterHandler;
             _notifyHandler = notifyHandler;
         }
 
         public async Task Register(RegistrationRequestSigr request)
         {
+            _serviceProvider.GetRequiredService<PeerSigrBridge>();
             Console.WriteLine($"Registering {Context.ConnectionId}");
             await _registerHandler!(Context.ConnectionId, request);
         }
 
         public async Task Unregister(RegistrationRequestSigr request)
         {
+            _serviceProvider.GetRequiredService<PeerSigrBridge>();
             Console.WriteLine($"Unregistering {Context.ConnectionId}");
             await _unregisterHandler!(Context.ConnectionId, request);
         }
 
         public async Task MakeRequest(MessageSigr message)
         {
-            Console.WriteLine($"Making request {message.Id}");
-            await _makeRequestHandler!(Context.ConnectionId, message);
+            throw new NotSupportedException();
+            //_serviceProvider.GetRequiredService<PeerSigrBridge>();
+            //Console.WriteLine($"Making request {message.Id}");
+            //await _makeRequestHandler!(Context.ConnectionId, message);
         }
 
         public async Task SendMakeRequestResponse(MessageSigr message)
@@ -61,6 +63,7 @@ namespace EasyRpc.Plugin.SignalR
 
         public async Task Notify(MessageSigr message)
         {
+            _serviceProvider.GetRequiredService<PeerSigrBridge>();
             Console.WriteLine($"Notifying {message.Id}");
             await _notifyHandler!(Context.ConnectionId, message);
         }

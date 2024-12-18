@@ -22,7 +22,7 @@ namespace EasyRpc.Plugin.SignalR
         {
             _serviceProvider = serviceProvider;
             _refInterface = _hub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
-            _hub.SetupHandlers(RegisterHandler, UnregisterHandler, MakeRequestHandler, NotifyHandler);
+            _hub.SetupHandlers(RegisterHandler, UnregisterHandler, NotifyHandler);
             _clientStore = _serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
         }
 
@@ -63,12 +63,6 @@ namespace EasyRpc.Plugin.SignalR
         private async Task NotifyHandler(string connectionId, MessageSigr message)
         {
             await MasterHandle.Notify(message);
-        }
-
-        private async Task MakeRequestHandler(string connectionId, MessageSigr message)
-        {
-            //TODO: We dont need to handle it at master end
-            await Task.FromException<NotImplementedException>(new NotImplementedException("MakeRequestHandler not implemented"));
         }
     }
 }
