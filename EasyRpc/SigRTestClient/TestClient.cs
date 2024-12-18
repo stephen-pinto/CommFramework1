@@ -25,7 +25,7 @@ namespace SigRTestClient
             Thread.Sleep(2000);
 
             var connection = new HubConnectionBuilder()
-                .WithUrl("https://127.0.0.1:55155/peer", opts =>
+                .WithUrl("https://localhost:55155/peer", opts =>
                 {
                     opts.HttpMessageHandlerFactory = (handler) =>
                     {

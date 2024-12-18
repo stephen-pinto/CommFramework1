@@ -10,45 +10,40 @@ namespace EasyRpc.Plugin.SignalR
         private readonly SignalRPeerHub _hub;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly IMemoryCache _memoryCache;
-        private const string Key = "ClientStore";
+        private const string KeyPrefix = "Client_";
 
         public DefaultSigrPeerClientStore(IMemoryCache memoryCache, SignalRPeerHub hub, ResponseAwaiter responseAwaiter)
         {
             _hub = hub;
             _memoryCache = memoryCache;
             _responseAwaiter = responseAwaiter;
-
-            if (!memoryCache.TryGetValue(Key, out Dictionary<string, IPeerService>? _))
-                memoryCache.Set(Key, new Dictionary<string, IPeerService>());
         }
 
         public IPeerService GetClient(string connectionId)
         {
-            var clients = _memoryCache.Get<Dictionary<string, IPeerService>>(Key)!;
-            return clients[connectionId];
+            return GetCachedClient(connectionId);
         }
 
         public IPeerService AddClient(string connectionId, RegistrationRequestSigr registration)
         {
-            var clients = _memoryCache.Get<Dictionary<string, IPeerService>>(Key)!;
             var client = new PeerSigrClient(_hub, registration, connectionId, _responseAwaiter);
-            clients.Add(connectionId, client);
-            _memoryCache.Set(Key, clients);
+            _memoryCache.Set(KeyPrefix + connectionId, client);
             return client;
         }
 
         public void RemoveClient(string connectionId)
         {
-            var clients = _memoryCache.Get<Dictionary<string, IPeerService>>(Key)!;
-            PeerSigrClient sigrPeerClient = (PeerSigrClient)clients[connectionId];
-            clients.Remove(connectionId);
-            _memoryCache.Set(Key, clients);
+            _memoryCache.Remove(KeyPrefix + connectionId);
         }
 
         public RegistrationRequestSigr GetRegistration(string connectionId)
         {
-            var clients = _memoryCache.Get<Dictionary<string, IPeerService>>(Key)!;
-            return ((PeerSigrClient)clients[connectionId]).Registration;
+            return GetCachedClient(connectionId).Registration;
+        }
+
+        private PeerSigrClient GetCachedClient(string connectionId)
+        {
+            return (PeerSigrClient)_memoryCache.Get<IPeerService>(KeyPrefix + connectionId)!;
         }
     }
 }
