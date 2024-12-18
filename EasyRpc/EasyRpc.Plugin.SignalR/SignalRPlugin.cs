@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography.X509Certificates;
 
 namespace EasyRpc.Plugin.SignalR
@@ -46,12 +45,13 @@ namespace EasyRpc.Plugin.SignalR
 
             //_builder.Logging.AddJsonConsole();
             _builder.Services.AddSignalR();
+            _builder.Services.AddMemoryCache();
             _builder.Services.AddSingleton<ResponseAwaiter>();
-            _builder.Services.AddTransient<IMasterService>((_) => _masterService!);
             _builder.Services.AddSingleton<ISigrPeerClientStore, DefaultSigrPeerClientStore>();
             _builder.Services.AddSingleton<IPeerClientFactory, SigrPeerClientFactory>();
             _builder.Services.AddSingleton<SignalRPeerHub>();
             _builder.Services.AddSingleton<PeerSigrBridge>();
+            _builder.Services.AddTransient<IMasterService>((_) => _masterService!);
 
             _app = _builder.Build();
             _app.MapHub<SignalRPeerHub>(sconfig.EndpointPath);
@@ -65,7 +65,7 @@ namespace EasyRpc.Plugin.SignalR
         public void Load(IMasterService masterService)
         {
             _masterService = masterService;
-            _app!.Start();
+            _app!.RunAsync();
         }
 
         public void Unload()
@@ -77,7 +77,7 @@ namespace EasyRpc.Plugin.SignalR
         {
             return new Dictionary<string, IPeerClientFactory>()
             {
-                { TypeIdentifier, _builder!.Services.BuildServiceProvider().GetService<IPeerClientFactory>()! }
+                { TypeIdentifier, _app!.Services.GetService<IPeerClientFactory>()! }
             };
         }
     }

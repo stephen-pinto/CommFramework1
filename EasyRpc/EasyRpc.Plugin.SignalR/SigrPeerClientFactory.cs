@@ -2,22 +2,21 @@
 using EasyRpc.Core.Client;
 using EasyRpc.Master;
 using EasyRpc.Plugin.SignalR.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyRpc.Plugin.SignalR
 {
     public class SigrPeerClientFactory : IPeerClientFactory
     {
-        private readonly ISigrPeerClientStore _sigrPeerClientStore;
+        private readonly ISigrPeerClientStore _clientStore;
 
-        public SigrPeerClientFactory(IServiceProvider serviceProvider)
+        public SigrPeerClientFactory(ISigrPeerClientStore clientStore)
         {
-            _sigrPeerClientStore = serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException($"{nameof(ISigrPeerClientStore)} not initialized", null);
+            _clientStore = clientStore;
         }
 
         public IPeerService GetHandle(RegistrationRequest registerationRequest)
         {
-            var client = _sigrPeerClientStore.GetClient(registerationRequest.Properties[CommonConstants.SigrReferenceTag]);
+            var client = _clientStore.GetClient(registerationRequest.Properties[CommonConstants.SigrReferenceTag]);
             return client;
         }
     }

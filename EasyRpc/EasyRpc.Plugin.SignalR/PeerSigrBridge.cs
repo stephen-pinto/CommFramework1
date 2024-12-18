@@ -11,30 +11,37 @@ namespace EasyRpc.Plugin.SignalR
     {
         private readonly SignalRPeerHub _hub;
         private readonly ISigrPeerClientStore _clientStore;
-        public event NotifyDelegate? Notify;
         private readonly IEasyRpcSignalRHub _refInterface;
         private readonly IServiceProvider _serviceProvider;
         private IMasterService? _masterHandle;
 
         private IMasterService MasterHandle => _masterHandle ??= _serviceProvider.GetService<IMasterService>() ?? throw new TypeInitializationException("MasterService not initialized", null);
 
-        public PeerSigrBridge(IServiceProvider serviceProvider)
+        public PeerSigrBridge(IServiceProvider serviceProvider, SignalRPeerHub hub, ISigrPeerClientStore clientStore)
         {
             _serviceProvider = serviceProvider;
-            _refInterface = _hub = serviceProvider.GetService<SignalRPeerHub>() ?? throw new TypeInitializationException("PeerHub not initialized", null);
+            _refInterface = _hub = hub;
             _hub.SetupHandlers(RegisterHandler, UnregisterHandler, NotifyHandler);
-            _clientStore = _serviceProvider.GetService<ISigrPeerClientStore>() ?? throw new TypeInitializationException("ISigrPeerClientStore not initialized", null);
+            _clientStore = clientStore;
         }
 
         private Task RegisterHandler(string connectionId, RegistrationRequestSigr registrationReq)
         {
+            //We need to add the client first
+            _clientStore.AddClient(connectionId, registrationReq);
+            var sample = _clientStore.GetRegistration(connectionId);
+
             RegistrationRequest registerationRequest = registrationReq;
             //TODO: Change this to something unique and different then connection id
             registerationRequest.Properties.Add(CommonConstants.SigrReferenceTag, connectionId);
             var result = MasterHandle.Register(registerationRequest).GetAwaiter().GetResult();
 
             if (result.Status != "Success")
+            {
+                //If the addition failed then remove it and fault.
+                _clientStore.RemoveClient(connectionId);
                 throw new Exception("Registration failed");
+            }
 
             registrationReq.RegistrationId = result.RegistrationId;
 
@@ -43,7 +50,6 @@ namespace EasyRpc.Plugin.SignalR
                 .SendAsync(nameof(SignalRPeerHub.SendRegisterResponse),
                 new RegistrationResponseSigr() { RegistrationId = result.RegistrationId, Status = result.Status, Message = result.Message });
 
-            _clientStore.AddClient(connectionId, registrationReq);
             return Task.CompletedTask;
         }
 
