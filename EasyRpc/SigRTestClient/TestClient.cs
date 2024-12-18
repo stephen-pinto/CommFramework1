@@ -10,6 +10,8 @@ namespace SigRTestClient
 
         internal void Run()
         {
+            Thread.Sleep(2000);
+
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:55155/peer")
                 .Build();

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography.X509Certificates;
 
 namespace EasyRpc.Plugin.SignalR
@@ -62,7 +61,7 @@ namespace EasyRpc.Plugin.SignalR
         public void Load(IMasterService masterService)
         {
             _masterService = masterService;
-            _app!.Run();
+            _app!.RunAsync();
         }
 
         public void Unload()

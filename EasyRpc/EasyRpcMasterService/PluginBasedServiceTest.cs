@@ -16,17 +16,10 @@ namespace EasyRpcMasterService
             IEasyRpcPlugin sigrPlugin = new SignalRPlugin();
             sigrPlugin.Init(new SignalRPluginConfiguration());
 
-            //var backendPlugin = new BackendClientPlugin();
-            //backendPlugin.Init(new BackendPluginConfiguration() { MasterClient = service, MainPeerClient = service });
-
             service.UsePlugin(sigrPlugin);
-            //service.UsePlugin(backendPlugin);
 
             //Start all the services and load all the plugins
             service.Start();
-
-            //Set sending signals
-            //backendPlugin.Test();
 
             Console.WriteLine("Press any key to stop the service...");
             Console.ReadKey();

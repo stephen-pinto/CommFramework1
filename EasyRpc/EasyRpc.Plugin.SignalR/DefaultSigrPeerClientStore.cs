@@ -2,6 +2,7 @@
 using EasyRpc.Master;
 using EasyRpc.Plugin.SignalR.Interfaces;
 using EasyRpc.Plugin.SignalR.Types;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyRpc.Plugin.SignalR
@@ -39,6 +40,10 @@ namespace EasyRpc.Plugin.SignalR
             if (result.Status != "Success")
                 throw new Exception("Registration failed");
             registration.RegistrationId = result.RegistrationId;
+            //_hub.Clients
+            //    .Client(connectionId)
+            //    .SendAsync(nameof(SendRegisterResponse),
+            //    new RegistrationResponseSigr() { RegistrationId = request.RegistrationId, Status = request. });
             _clients.Add(connectionId, client);
             return client;
         }

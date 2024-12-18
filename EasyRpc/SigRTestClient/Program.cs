@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Microsoft.AspNetCore.SignalR.Client;
+using SigRTestClient;
 
 Console.WriteLine("Hello, World!");
 
+TestClient client = new();
+client.Run();
