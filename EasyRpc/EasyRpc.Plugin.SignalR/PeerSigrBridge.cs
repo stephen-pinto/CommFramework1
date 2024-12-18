@@ -42,12 +42,13 @@ namespace EasyRpc.Plugin.SignalR
                 throw new Exception("Registration failed");
             }
 
-            registrationReq.RegistrationId = result.RegistrationId;
+            var registration = new RegistrationRequestSigr(result.RegistrationId, registrationReq.Type, registrationReq.Name);
+            _clientStore.UpdateClient(connectionId, registrationReq);
 
             await _hub.Clients
                 .Client(connectionId)
                 .SendAsync(nameof(IEasyRpcSignalRHub.SendRegisterResponse),
-                new RegistrationResponseSigr() { RegistrationId = result.RegistrationId, Status = result.Status, Message = result.Message });
+                new RegistrationResponseSigr(result.RegistrationId, result.Status, result.Message));
         }
 
         private Task UnregisterHandler(string connectionId, RegistrationRequestSigr request)

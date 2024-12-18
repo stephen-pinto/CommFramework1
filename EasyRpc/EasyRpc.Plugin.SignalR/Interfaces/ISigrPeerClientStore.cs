@@ -8,7 +8,9 @@ namespace EasyRpc.Plugin.SignalR.Interfaces
         IPeerService GetClient(string connectionId);
         
         IPeerService AddClient(string connectionId, RegistrationRequestSigr registration);
-        
+
+        IPeerService UpdateClient(string connectionId, RegistrationRequestSigr registration);
+
         void RemoveClient(string connectionId);
 
         public RegistrationRequestSigr GetRegistration(string connectionId);

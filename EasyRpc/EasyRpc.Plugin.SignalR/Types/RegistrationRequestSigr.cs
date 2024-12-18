@@ -2,57 +2,50 @@
 
 namespace EasyRpc.Plugin.SignalR.Types
 {
-    public class RegistrationRequestSigr
+    public record RegistrationRequestSigr(
+        string RegistrationId,
+        string Type,
+        string Name)
     {
-        public string? RegistrationId { get; set; }
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public Dictionary<string, string> Properties { get; set; }
-
-        public RegistrationRequestSigr()
-        {
-            Properties = new Dictionary<string, string>();
-        }
+        public Dictionary<string, string> Properties { get; set; } = new();
 
         public static implicit operator RegistrationRequestSigr(RegistrationRequest registrationRequest)
         {
-            return new RegistrationRequestSigr
-            {
-                RegistrationId = registrationRequest.RegistrationId,
-                Type = registrationRequest.Type,
-                Name = registrationRequest.Name,
-                Properties = registrationRequest.Properties != null ? new Dictionary<string, string>(registrationRequest.Properties) : new Dictionary<string, string>()
-            };
+            var instance = new RegistrationRequestSigr(
+                registrationRequest.RegistrationId,
+                registrationRequest.Type,
+                registrationRequest.Name);
+
+            instance.Properties = registrationRequest.Properties != null ? new Dictionary<string, string>(registrationRequest.Properties) : new Dictionary<string, string>();
+            return instance;
         }
 
         public static implicit operator RegistrationRequest(RegistrationRequestSigr registrationRequestSigr)
         {
-            var request = new RegistrationRequest
+            var instance = new RegistrationRequest
             {
                 RegistrationId = registrationRequestSigr.RegistrationId,
                 Type = registrationRequestSigr.Type,
                 Name = registrationRequestSigr.Name
             };
 
-            request.Properties.MergeFrom(registrationRequestSigr.Properties);
-            return request;
+            instance.Properties.MergeFrom(registrationRequestSigr.Properties);
+            return instance;
         }
     }
 
-    public class RegistrationResponseSigr
+    public record RegistrationResponseSigr(
+        string RegistrationId,
+        string Status,
+        string Message
+        )
     {
-        public string? RegistrationId { get; set; }
-        public string? Status { get; set; }
-        public string? Message { get; set; }
-
         public static implicit operator RegistrationResponseSigr(RegistrationResponse registrationResponse)
         {
-            return new RegistrationResponseSigr
-            {
-                RegistrationId = registrationResponse.RegistrationId,
-                Status = registrationResponse.Status,
-                Message = registrationResponse.Message
-            };
+            return new RegistrationResponseSigr(
+                registrationResponse.RegistrationId,
+                registrationResponse.Status,
+                registrationResponse.Message);
         }
 
         public static implicit operator RegistrationResponse(RegistrationResponseSigr registrationResponseSigr)

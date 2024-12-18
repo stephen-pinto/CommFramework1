@@ -38,12 +38,21 @@ namespace EasyRpc.Plugin.SignalR
 
         public RegistrationRequestSigr GetRegistration(string connectionId)
         {
-            return GetCachedClient(connectionId).Registration;
+            return GetCachedClient(connectionId).Registration!;
         }
 
         private PeerSigrClient GetCachedClient(string connectionId)
         {
             return (PeerSigrClient)_memoryCache.Get<IPeerService>(KeyPrefix + connectionId)!;
+        }
+
+        public IPeerService UpdateClient(string connectionId, RegistrationRequestSigr registration)
+        {
+            var client = GetCachedClient(connectionId);
+            client.Registration = registration;
+            RemoveClient(connectionId);
+            AddClient(connectionId, registration);
+            return client;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using System.Security.Cryptography;
 
 namespace SigRTestClient
 {

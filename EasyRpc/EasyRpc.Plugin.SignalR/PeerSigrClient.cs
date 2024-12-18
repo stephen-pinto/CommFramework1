@@ -11,9 +11,8 @@ namespace EasyRpc.Plugin.SignalR
         private readonly string _sigrConnectionId;
         private readonly SignalRPeerHub _hubRef;
         private readonly ResponseAwaiter _responseAwaiter;
-        private readonly RegistrationRequestSigr _registration;
 
-        public RegistrationRequestSigr Registration => _registration;
+        public RegistrationRequestSigr? Registration { get; set; }
 
         public string ConnectionId => _sigrConnectionId;
 
@@ -21,14 +20,14 @@ namespace EasyRpc.Plugin.SignalR
 
         public PeerSigrClient(
             SignalRPeerHub hub,
-            RegistrationRequestSigr registeration,
+            RegistrationRequestSigr registration,
             string sigrConnectionId,
             ResponseAwaiter responseAwaiter)
         {
             _hubRef = hub;
-            _registration = registeration;
             _sigrConnectionId = sigrConnectionId;
             _responseAwaiter = responseAwaiter;
+            Registration = registration;
         }
 
         public async Task<Message> MakeRequest(Message message)
