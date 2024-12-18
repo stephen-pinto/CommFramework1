@@ -2,11 +2,23 @@
 
 namespace SigRTestClient
 {
+    public interface IEasyRpcSignalRHub
+    {
+        Task Register(RegistrationRequestSigr request);
+        Task SendRegisterResponse(RegistrationResponseSigr response);
+        Task Unregister(RegistrationRequestSigr request);
+        Task SendUnregisterResponse(RegistrationResponseSigr response);
+        Task MakeRequest(MessageSigr message);
+        Task SendMakeRequestResponse(MessageSigr message);
+        Task Notify(MessageSigr message);
+    }
+
     internal class TestClient
     {
         private string _id = string.Empty;
         private string _type = "SigR";
         private string _peerId = string.Empty;
+        private RegistrationRequestSigr? _registration;
 
         internal void Run()
         {
@@ -17,18 +29,20 @@ namespace SigRTestClient
                 .Build();
 
             //Handle registration
-            connection.On<RegistrationResponseSigr>("RegisterResponse", (message) =>
+            connection.On<RegistrationResponseSigr>(nameof(IEasyRpcSignalRHub.SendRegisterResponse), (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
                 _id = message.RegistrationId;
             });
-            connection.InvokeAsync(_peerId, new RegistrationRequestSigr(_peerId, _type, "SigRClient1"));
+
+            _registration = new RegistrationRequestSigr("", _type, "SigRClient1");
+            connection.InvokeAsync(nameof(IEasyRpcSignalRHub.Register), _registration);
 
             //Handle requests
-            connection.On<MessageSigr>("MakeRequest", (message) =>
+            connection.On<MessageSigr>(nameof(IEasyRpcSignalRHub.MakeRequest), (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
-                connection.InvokeAsync("SendMakeRequestResponse",
+                connection.InvokeAsync(nameof(IEasyRpcSignalRHub.SendMakeRequestResponse),
                     new MessageSigr(_peerId, _id,
                     message.Id, _type, 
                     "This is some data from SigR Client/Peer for Request: " + message.Data));
@@ -43,6 +57,9 @@ namespace SigRTestClient
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
+
+            connection.InvokeAsync(nameof(IEasyRpcSignalRHub.Unregister), _registration);
+            Console.WriteLine("Unregistered...");
         }
     }
 }

@@ -18,6 +18,8 @@ namespace EasyRpcMasterService
 
             service.UsePlugin(sigrPlugin);
 
+            service.PeerAdded += PeerAdded;
+
             //Start all the services and load all the plugins
             service.Start();
 
@@ -26,6 +28,11 @@ namespace EasyRpcMasterService
 
             //Stop all services and unload the plugins
             service.Stop();
+        }
+
+        private static void PeerAdded(object? sender, EasyRpc.Core.Client.PeerInfo e)
+        {
+            Console.WriteLine("SERVER APP: Peer added with info => " + e);
         }
     }
 }
