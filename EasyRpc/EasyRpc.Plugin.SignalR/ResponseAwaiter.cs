@@ -14,7 +14,7 @@ namespace EasyRpc.Plugin.SignalR
             _awaitingResponses = new ConcurrentDictionary<string, ManualResetEventSlim>();
         }
 
-        public MessageSigr AwaitResponse(string id, ManualResetEventSlim resetEventSlim, int timeout = 5000)
+        public MessageSigr AwaitResponse(string id, ManualResetEventSlim resetEventSlim, int timeout = 15000)
         {
             //Register the await event
             _awaitingResponses.TryAdd(id, resetEventSlim);

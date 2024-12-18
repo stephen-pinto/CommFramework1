@@ -55,10 +55,14 @@ namespace SigRTestClient
             connection.On<MessageSigr>(nameof(IEasyRpcSignalRHub.MakeRequest), (message) =>
             {
                 Console.WriteLine($"[HUB]: {message}");
-                connection.InvokeAsync(nameof(IEasyRpcSignalRHub.SendMakeRequestResponse),
+
+                Task.Run(() =>
+                {
+                    connection.InvokeAsync(nameof(IEasyRpcSignalRHub.SendMakeRequestResponse),
                     new MessageSigr(_peerId, _id,
                     message.Id, _type,
                     "This is some data from SigR Client/Peer for Request: " + message.Data));
+                });
             });
 
             //Handle close and reconnect

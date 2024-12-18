@@ -18,7 +18,11 @@ namespace EasyRpcMasterService
 
             service.UsePlugin(sigrPlugin);
 
-            service.PeerAdded += PeerAdded;
+            service.PeerAdded += (sender, peerInfo) =>
+                {
+                    service.MakeRequest(
+                        new EasyRpc.Types.Message() { From = service.Id, To = peerInfo.Id, Type = EasyRpc.Types.MessageType.Request, Data = "Welcome to the world of EasyRPC!!!" });
+                };
 
             //Start all the services and load all the plugins
             service.Start();

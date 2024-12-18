@@ -9,7 +9,6 @@ namespace EasyRpc.Plugin.SignalR
     public class PeerSigrClient : IPeerService
     {
         private readonly string _sigrConnectionId;
-        private readonly IEasyRpcSignalRHub _refInterface;
         private readonly SignalRPeerHub _hubRef;
         private readonly ResponseAwaiter _responseAwaiter;
         private readonly RegistrationRequestSigr _registration;
@@ -26,8 +25,8 @@ namespace EasyRpc.Plugin.SignalR
             string sigrConnectionId,
             ResponseAwaiter responseAwaiter)
         {
+            _hubRef = hub;
             _registration = registeration;
-            _refInterface = _hubRef = hub;
             _sigrConnectionId = sigrConnectionId;
             _responseAwaiter = responseAwaiter;
         }
@@ -35,11 +34,14 @@ namespace EasyRpc.Plugin.SignalR
         public async Task<Message> MakeRequest(Message message)
         {
             MessageSigr messageSigr = message;
-            await _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(_refInterface.MakeRequest), messageSigr);
-            var response = _responseAwaiter.AwaitResponse(messageSigr.Id, new ManualResetEventSlim(false));
-            if (response == null)
-                throw new Exception("Response not received");
-            return (Message)response;
+            return await Task.Run(() =>
+            {
+                _hubRef.Clients.Client(_sigrConnectionId).SendAsync(nameof(IEasyRpcSignalRHub.MakeRequest), messageSigr);
+                var response = _responseAwaiter.AwaitResponse(messageSigr.Id, new ManualResetEventSlim(false));
+                if (response == null)
+                    throw new Exception("Response not received");
+                return (Message)response;
+            });
         }
 
         public void Dispose()

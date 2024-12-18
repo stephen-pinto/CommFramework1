@@ -11,7 +11,6 @@ namespace EasyRpc.Plugin.SignalR
     {
         private readonly SignalRPeerHub _hub;
         private readonly ISigrPeerClientStore _clientStore;
-        private readonly IEasyRpcSignalRHub _refInterface;
         private readonly IServiceProvider _serviceProvider;
         private IMasterService? _masterHandle;
 
@@ -20,7 +19,7 @@ namespace EasyRpc.Plugin.SignalR
         public PeerSigrBridge(IServiceProvider serviceProvider, SignalRPeerHub hub, ISigrPeerClientStore clientStore)
         {
             _serviceProvider = serviceProvider;
-            _refInterface = _hub = hub;
+            _hub = hub;
             _hub.SetupHandlers(RegisterHandler, UnregisterHandler, NotifyHandler);
             _clientStore = clientStore;
         }
@@ -47,7 +46,7 @@ namespace EasyRpc.Plugin.SignalR
 
             _hub.Clients
                 .Client(connectionId)
-                .SendAsync(nameof(SignalRPeerHub.SendRegisterResponse),
+                .SendAsync(nameof(IEasyRpcSignalRHub.SendRegisterResponse),
                 new RegistrationResponseSigr() { RegistrationId = result.RegistrationId, Status = result.Status, Message = result.Message });
 
             return Task.CompletedTask;
@@ -56,6 +55,7 @@ namespace EasyRpc.Plugin.SignalR
         private Task UnregisterHandler(string connectionId, RegistrationRequestSigr request)
         {
             //TODO: Check if we need to remove the registration info on unregister for now ignoring it
+            //TODO: Check if we need to respond back to the client
             var registration = _clientStore.GetRegistration(connectionId);
 
             var result = MasterHandle.Unregister(request).GetAwaiter().GetResult();
