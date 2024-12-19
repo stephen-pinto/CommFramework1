@@ -73,6 +73,14 @@ namespace SigRTestClient
                 await connection.StartAsync();
             };
 
+            Console.WriteLine("Press any key to send notification...");
+            Console.ReadKey();
+
+            connection.InvokeAsync(nameof(IEasyRpcSignalRHub.Notify),
+                    new MessageSigr(_peerAddress, _selfAddress,
+                    Guid.NewGuid().ToString(), MessageTypeSigr.Response,
+                    "Notification from SigR Client/Peer"));
+
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
 

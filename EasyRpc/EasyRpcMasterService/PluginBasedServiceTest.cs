@@ -23,6 +23,11 @@ namespace EasyRpcMasterService
                     Console.WriteLine("[SERVER APP] Peer added: " + peerInfo);
                 };
 
+            service.Notification += (sender, message) =>
+                {
+                    Console.WriteLine("[SERVER APP] Notification received: " + message.Data);
+                };
+
             //Start all the services and load all the plugins
             service.Start();
 
