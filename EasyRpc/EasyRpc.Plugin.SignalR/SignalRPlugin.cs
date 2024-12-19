@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace EasyRpc.Plugin.SignalR
@@ -28,10 +30,14 @@ namespace EasyRpc.Plugin.SignalR
                     builder.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed((_) => true).AllowCredentials();
                 }));
 
-            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadOnly);
-            var certificate = store.Certificates.OfType<X509Certificate2>()
-                .First(c => c.FriendlyName == sconfig.CertificateFriendlyName);
+            //var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+            //store.Open(OpenFlags.ReadOnly);
+            //var certificate = store.Certificates.OfType<X509Certificate2>()
+            //    .First(c => c.FriendlyName == sconfig.CertificateFriendlyName);
+            var process = Process.GetCurrentProcess(); // Or whatever method you are using
+            string fullPath = process.MainModule.FileName;
+            var certificate1 = X509Certificate2.CreateFromSignedFile(fullPath);
+            var certificate = new X509Certificate2(certificate1.GetRawCertData());
 
             _builder.WebHost.ConfigureKestrel(options =>
             {
